@@ -61,6 +61,37 @@
     <entry name="zaiReminderDay" type="Int">
       <default>0</default>
     </entry>
+    <!-- The reminders' knobs (defaults mirror the constants in
+         contents/ui/js/reminder.js, which the settings override). -->
+    <entry name="resetReminderEnabled" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="resetReminderHours" type="Int">
+      <default>24</default>
+      <min>1</min>
+      <max>72</max>
+    </entry>
+    <entry name="resetReminderPercent" type="Int">
+      <default>20</default>
+      <min>0</min>
+      <max>90</max>
+    </entry>
+    <entry name="dailyDigestEnabled" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="digestTime1" type="String">
+      <default>09:00</default>
+    </entry>
+    <entry name="digestTime2" type="String">
+      <default>21:00</default>
+    </entry>
+    <!-- Local-day stamps per digest slot (js/reminder.js localDay). -->
+    <entry name="digestDay1" type="Int">
+      <default>0</default>
+    </entry>
+    <entry name="digestDay2" type="Int">
+      <default>0</default>
+    </entry>
     <!-- Bumped by the config page after secrets are written to KWallet so the
          applet re-reads them. -->
     <entry name="secretsRevision" type="Int">

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deepseek-usage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 16:36+0800\n"
-"PO-Revision-Date: 2026-09-30 16:36+0800\n"
+"POT-Creation-Date: 2026-09-30 16:52+0800\n"
+"PO-Revision-Date: 2026-09-30 16:52+0800\n"
 "Last-Translator: Unreviewed machine translation\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -325,6 +325,42 @@ msgstr "Z.ai API 密钥状态："
 msgid "Z.ai base URL:"
 msgstr "Z.ai 基础 URL："
 
+#: contents/ui/ConfigGeneral.qml
+msgid "Reminders"
+msgstr "提醒"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Reset reminder:"
+msgstr "重置提醒："
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Warn when a weekly quota is about to reset with much of it unused"
+msgstr "周额度即将重置且大部分未使用时提醒"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Hours before reset:"
+msgstr "提前小时数："
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Minimum unused (%):"
+msgstr "最低剩余（%）："
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Daily digest:"
+msgstr "每日摘要："
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Summarize today's quota usage twice a day"
+msgstr "每天两次汇总今天的额度用量"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "First reminder time:"
+msgstr "第一次时间："
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Second reminder time:"
+msgstr "第二次时间："
+
 #: contents/ui/FullRepresentation.qml
 msgid "Today"
 msgstr "今日"
@@ -521,6 +557,18 @@ msgstr "周额度还有 %1 未使用，将在 %2 后重置——每天用约 %3 
 #: contents/ui/main.qml
 msgid "Z.ai weekly quota is about to reset"
 msgstr "Z.ai 周额度即将重置"
+
+#: contents/ui/main.qml
+msgid "Kimi weekly quota: %1 used, %2 today"
+msgstr "Kimi 周额度：已用 %1，今日 %2"
+
+#: contents/ui/main.qml
+msgid "Z.ai weekly quota: %1 used, %2 today"
+msgstr "Z.ai 周额度：已用 %1，今日 %2"
+
+#: contents/ui/main.qml
+msgid "Today's usage"
+msgstr "今日用量"
 
 #: contents/ui/main.qml
 msgid "Kimi weekly usage: %1"

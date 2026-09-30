@@ -20,6 +20,7 @@ import org.kde.plasma.plasmoid
 import "js/wallet.js" as WalletJs
 import "js/format.js" as Fmt
 import "js/api.js" as Api
+import "js/reminder.js" as Reminder
 
 KCM.SimpleKCM {
     id: page
@@ -38,6 +39,12 @@ KCM.SimpleKCM {
     property bool cfg_showProviderIcons: false
     property string cfg_kimiBaseUrl: ""
     property string cfg_zaiBaseUrl: ""
+    property bool cfg_resetReminderEnabled: true
+    property int cfg_resetReminderHours: 24
+    property int cfg_resetReminderPercent: 20
+    property bool cfg_dailyDigestEnabled: true
+    property string cfg_digestTime1: "09:00"
+    property string cfg_digestTime2: "21:00"
     property int cfg_secretsRevision: 0
 
     property bool apiKeySet: false
@@ -143,6 +150,24 @@ KCM.SimpleKCM {
         Plasmoid.configuration.showProviderIcons = cfg_showProviderIcons
         Plasmoid.configuration.kimiBaseUrl = cfg_kimiBaseUrl.trim()
         Plasmoid.configuration.zaiBaseUrl = cfg_zaiBaseUrl.trim()
+        Plasmoid.configuration.resetReminderEnabled = cfg_resetReminderEnabled
+        Plasmoid.configuration.resetReminderHours = cfg_resetReminderHours
+        Plasmoid.configuration.resetReminderPercent = cfg_resetReminderPercent
+        Plasmoid.configuration.dailyDigestEnabled = cfg_dailyDigestEnabled
+        // Normalised by parse-on-save: a hand-typed "9:5" that parses
+        // becomes "09:05", and an unparsable time falls back to the default
+        // rather than storing something the digest can never match.
+        cfg_digestTime1 = Reminder.parseClock(cfg_digestTime1) === null ? "09:00" : normalizedClock(cfg_digestTime1)
+        cfg_digestTime2 = Reminder.parseClock(cfg_digestTime2) === null ? "21:00" : normalizedClock(cfg_digestTime2)
+        Plasmoid.configuration.digestTime1 = cfg_digestTime1
+        Plasmoid.configuration.digestTime2 = cfg_digestTime2
+    }
+
+    function normalizedClock(text) {
+        var minutes = Reminder.parseClock(text);
+        var h = Math.floor(minutes / 60);
+        var m = minutes % 60;
+        return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m;
     }
 
     // Bumping the revision makes the running applet re-read the wallet. The
@@ -615,6 +640,78 @@ KCM.SimpleKCM {
             text: page.cfg_zaiBaseUrl
             onEditingFinished: {
                 page.cfg_zaiBaseUrl = text.trim();
+                page.configurationChanged();
+            }
+        }
+
+        // --------------------------------------------------------- reminders
+        QQC2.Label {
+            Kirigami.FormData.isSection: true
+            text: i18n("Reminders")
+        }
+
+        QQC2.CheckBox {
+            Kirigami.FormData.label: i18n("Reset reminder:")
+            text: i18n("Warn when a weekly quota is about to reset with much of it unused")
+            checked: page.cfg_resetReminderEnabled
+            onToggled: {
+                page.cfg_resetReminderEnabled = checked;
+                page.configurationChanged();
+            }
+        }
+
+        QQC2.SpinBox {
+            Kirigami.FormData.label: i18n("Hours before reset:")
+            from: 1
+            to: 72
+            value: page.cfg_resetReminderHours
+            onValueModified: {
+                page.cfg_resetReminderHours = value;
+                page.configurationChanged();
+            }
+        }
+
+        QQC2.SpinBox {
+            Kirigami.FormData.label: i18n("Minimum unused (%):")
+            from: 0
+            to: 90
+            value: page.cfg_resetReminderPercent
+            onValueModified: {
+                page.cfg_resetReminderPercent = value;
+                page.configurationChanged();
+            }
+        }
+
+        QQC2.CheckBox {
+            Kirigami.FormData.label: i18n("Daily digest:")
+            text: i18n("Summarize today's quota usage twice a day")
+            checked: page.cfg_dailyDigestEnabled
+            onToggled: {
+                page.cfg_dailyDigestEnabled = checked;
+                page.configurationChanged();
+            }
+        }
+
+        QQC2.TextField {
+            Kirigami.FormData.label: i18n("First reminder time:")
+            Layout.fillWidth: true
+            placeholderText: "09:00"
+            text: page.cfg_digestTime1
+            inputMask: "00:00"
+            onEditingFinished: {
+                page.cfg_digestTime1 = text.trim();
+                page.configurationChanged();
+            }
+        }
+
+        QQC2.TextField {
+            Kirigami.FormData.label: i18n("Second reminder time:")
+            Layout.fillWidth: true
+            placeholderText: "21:00"
+            text: page.cfg_digestTime2
+            inputMask: "00:00"
+            onEditingFinished: {
+                page.cfg_digestTime2 = text.trim();
                 page.configurationChanged();
             }
         }

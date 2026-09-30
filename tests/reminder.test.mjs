@@ -75,3 +75,57 @@ test("the reminder thresholds are pinned", () => {
     assert.equal(reminder.BEFORE_RESET_MS, 24 * 3600 * 1000);
     assert.equal(reminder.MIN_REMAINING_PERCENT, 20);
 });
+
+test("due honours the settings' overrides", () => {
+    // 30h out with the default 24h window: not due; a wider window is.
+    const v = reminder.verdict(40, NOW + 30 * 3600 * 1000, NOW);
+    assert.equal(reminder.due(v, 0, NOW), false);
+    assert.equal(reminder.due(v, 0, NOW, { beforeMs: 36 * 3600 * 1000 }), true);
+
+    // The minimum-unused bar moves the same way: 25% unused with the bar at
+    // 20 is due, with the bar at 30 it is not.
+    const w = reminder.verdict(75, NOW + 10 * 3600 * 1000, NOW);
+    assert.equal(reminder.due(w, 0, NOW), true);
+    assert.equal(reminder.due(w, 0, NOW, { minRemaining: 30 }), false);
+});
+
+test("parseClock accepts clocks and refuses the rest", () => {
+    assert.equal(reminder.parseClock("09:00"), 9 * 60);
+    assert.equal(reminder.parseClock("9:5"), 9 * 60 + 5);
+    assert.equal(reminder.parseClock("  23:59  "), 23 * 60 + 59);
+    assert.equal(reminder.parseClock("24:00"), null);
+    assert.equal(reminder.parseClock("12:60"), null);
+    assert.equal(reminder.parseClock(""), null);
+    assert.equal(reminder.parseClock(undefined), null);
+    assert.equal(reminder.parseClock("whenever"), null);
+});
+
+test("localDay and minutesOfDay follow the shifted clock", () => {
+    // UTC+3: the local day flips at 21:00 UTC, not at UTC midnight.
+    const plus3 = 3 * 3600 * 1000;
+    const localMidnight = new Date("2026-09-29T21:00:00Z").getTime();
+    assert.equal(reminder.localDay(localMidnight - 1, plus3), reminder.localDay(localMidnight, plus3) - 1);
+    assert.equal(reminder.minutesOfDay(new Date("2026-09-30T21:15:00Z").getTime(), plus3), 15);
+    assert.equal(reminder.minutesOfDay(new Date("2026-09-30T18:00:00Z").getTime(), plus3), 21 * 60);
+    // Offset 0 is the UTC behaviour the reset reminder's tests pin.
+    const utcMidnight = new Date("2026-09-30T00:00:00Z").getTime();
+    assert.equal(reminder.localDay(utcMidnight, 0), reminder.epochDay(utcMidnight));
+});
+
+test("digestDue fires once per local day per slot, only past its time", () => {
+    const plus8 = 8 * 3600 * 1000;
+    // 10:00 local (02:00 UTC) with the slot at 09:00: due, unless stamped.
+    const at1000 = new Date("2026-09-30T02:00:00Z").getTime();
+    assert.equal(reminder.digestDue(9 * 60, at1000, plus8, 0), true);
+    const today = reminder.localDay(at1000, plus8);
+    assert.equal(reminder.digestDue(9 * 60, at1000, plus8, today), false, "already sent this slot today");
+    // Still the same local day five hours later: still suppressed.
+    assert.equal(reminder.digestDue(9 * 60, at1000 + 5 * 3600 * 1000, plus8, today), false);
+    // Next local day, same clock: due again.
+    assert.equal(reminder.digestDue(9 * 60, at1000 + DAY, plus8, today), true);
+    // Before the slot's time: not yet.
+    const at0800 = new Date("2026-09-30T00:00:00Z").getTime();
+    assert.equal(reminder.digestDue(9 * 60, at0800, plus8, 0), false);
+    // An unparsable slot time never fires (the settings may hold junk).
+    assert.equal(reminder.digestDue(null, at1000, plus8, 0), false);
+});

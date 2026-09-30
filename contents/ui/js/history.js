@@ -114,3 +114,32 @@ function series(points, key) {
     }
     return out;
 }
+
+/*
+    How much of the quota was spent since local midnight: the earliest
+    recorded value at or after midnightSec against the value shown now.
+    Null when the recording has nothing from today (the widget was not
+    running, or the provider had no data), negative differences clamped to
+    zero — a quota that reset mid-day is not "negative usage".
+*/
+function dailyDelta(points, key, midnightSec, nowValue) {
+    var col = KEYS[key];
+    if (!col || !Array.isArray(points) || typeof nowValue !== "number" || !isFinite(nowValue)) {
+        return null;
+    }
+    var base = null;
+    for (var i = 0; i < points.length; i++) {
+        if (points[i][0] < midnightSec) {
+            continue;
+        }
+        if (points[i][col] === null || points[i][col] === undefined) {
+            continue;
+        }
+        base = points[i][col];
+        break;
+    }
+    if (base === null) {
+        return null;
+    }
+    return Math.max(0, Math.round(nowValue - base));
+}

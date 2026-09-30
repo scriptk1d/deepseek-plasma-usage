@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deepseek-usage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 16:36+0800\n"
-"PO-Revision-Date: 2026-09-30 16:36+0800\n"
+"POT-Creation-Date: 2026-09-30 16:52+0800\n"
+"PO-Revision-Date: 2026-09-30 16:52+0800\n"
 "Last-Translator: Unreviewed machine translation\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr\n"
@@ -334,6 +334,43 @@ msgstr "État de la clé d'API Z.ai :"
 msgid "Z.ai base URL:"
 msgstr "URL de base Z.ai :"
 
+#: contents/ui/ConfigGeneral.qml
+msgid "Reminders"
+msgstr "Rappels"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Reset reminder:"
+msgstr "Rappel de réinitialisation :"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Warn when a weekly quota is about to reset with much of it unused"
+msgstr ""
+"Prévenir quand un quota hebdomadaire est sur le point d’être réinitialisé alors qu’il est largement inutilisé"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Hours before reset:"
+msgstr "Heures avant la réinitialisation :"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Minimum unused (%):"
+msgstr "Minimum inutilisé (%) :"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Daily digest:"
+msgstr "Résumé quotidien :"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Summarize today's quota usage twice a day"
+msgstr "Résumer l’utilisation du quota du jour deux fois par jour"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "First reminder time:"
+msgstr "Première heure :"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Second reminder time:"
+msgstr "Deuxième heure :"
+
 #: contents/ui/FullRepresentation.qml
 msgid "Today"
 msgstr "Aujourd'hui"
@@ -536,6 +573,18 @@ msgstr ""
 #: contents/ui/main.qml
 msgid "Z.ai weekly quota is about to reset"
 msgstr "Le quota hebdomadaire Z.ai est sur le point d’être réinitialisé"
+
+#: contents/ui/main.qml
+msgid "Kimi weekly quota: %1 used, %2 today"
+msgstr "Quota hebdomadaire Kimi : %1 utilisé, %2 aujourd’hui"
+
+#: contents/ui/main.qml
+msgid "Z.ai weekly quota: %1 used, %2 today"
+msgstr "Quota hebdomadaire Z.ai : %1 utilisé, %2 aujourd’hui"
+
+#: contents/ui/main.qml
+msgid "Today's usage"
+msgstr "Utilisation du jour"
 
 #: contents/ui/main.qml
 msgid "Kimi weekly usage: %1"

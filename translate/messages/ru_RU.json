@@ -135,6 +135,18 @@
     "Quota trend": "Динамика квоты",
     "Kimi weekly quota is about to reset": "Недельная квота Kimi скоро сбросится",
     "Z.ai weekly quota is about to reset": "Недельная квота Z.ai скоро сбросится",
-    "%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.": "%1 недельной квоты не использовано, сброс через %2 — примерно %3 в день, чтобы израсходовать её."
+    "%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.": "%1 недельной квоты не использовано, сброс через %2 — примерно %3 в день, чтобы израсходовать её.",
+    "Reminders": "Напоминания",
+    "Reset reminder:": "Напоминание о сбросе:",
+    "Warn when a weekly quota is about to reset with much of it unused": "Предупреждать, когда недельная квота скоро сбросится, а большая её часть не использована",
+    "Hours before reset:": "Часов до сброса:",
+    "Minimum unused (%):": "Минимум не использовано (%):",
+    "Daily digest:": "Ежедневная сводка:",
+    "Summarize today's quota usage twice a day": "Дважды в день подводить использование квоты за день",
+    "First reminder time:": "Первое время:",
+    "Second reminder time:": "Второе время:",
+    "Today's usage": "Использование за день",
+    "Kimi weekly quota: %1 used, %2 today": "Недельная квота Kimi: использовано %1, сегодня %2",
+    "Z.ai weekly quota: %1 used, %2 today": "Недельная квота Z.ai: использовано %1, сегодня %2"
   }
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ai-usage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 16:36+0800\n"
+"POT-Creation-Date: 2026-09-30 16:52+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -322,6 +322,42 @@ msgstr ""
 msgid "Z.ai base URL:"
 msgstr ""
 
+#: contents/ui/ConfigGeneral.qml
+msgid "Reminders"
+msgstr ""
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Reset reminder:"
+msgstr ""
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Warn when a weekly quota is about to reset with much of it unused"
+msgstr ""
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Hours before reset:"
+msgstr ""
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Minimum unused (%):"
+msgstr ""
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Daily digest:"
+msgstr ""
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Summarize today's quota usage twice a day"
+msgstr ""
+
+#: contents/ui/ConfigGeneral.qml
+msgid "First reminder time:"
+msgstr ""
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Second reminder time:"
+msgstr ""
+
 #: contents/ui/FullRepresentation.qml
 msgid "Today"
 msgstr ""
@@ -512,6 +548,18 @@ msgstr ""
 
 #: contents/ui/main.qml
 msgid "Z.ai weekly quota is about to reset"
+msgstr ""
+
+#: contents/ui/main.qml
+msgid "Kimi weekly quota: %1 used, %2 today"
+msgstr ""
+
+#: contents/ui/main.qml
+msgid "Z.ai weekly quota: %1 used, %2 today"
+msgstr ""
+
+#: contents/ui/main.qml
+msgid "Today's usage"
 msgstr ""
 
 #: contents/ui/main.qml

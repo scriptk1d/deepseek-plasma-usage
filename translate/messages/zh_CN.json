@@ -131,6 +131,18 @@
     "Quota trend": "额度趋势",
     "Kimi weekly quota is about to reset": "Kimi 周额度即将重置",
     "Z.ai weekly quota is about to reset": "Z.ai 周额度即将重置",
-    "%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.": "周额度还有 %1 未使用，将在 %2 后重置——每天用约 %3 可以用完。"
+    "%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.": "周额度还有 %1 未使用，将在 %2 后重置——每天用约 %3 可以用完。",
+    "Reminders": "提醒",
+    "Reset reminder:": "重置提醒：",
+    "Warn when a weekly quota is about to reset with much of it unused": "周额度即将重置且大部分未使用时提醒",
+    "Hours before reset:": "提前小时数：",
+    "Minimum unused (%):": "最低剩余（%）：",
+    "Daily digest:": "每日摘要：",
+    "Summarize today's quota usage twice a day": "每天两次汇总今天的额度用量",
+    "First reminder time:": "第一次时间：",
+    "Second reminder time:": "第二次时间：",
+    "Today's usage": "今日用量",
+    "Kimi weekly quota: %1 used, %2 today": "Kimi 周额度：已用 %1，今日 %2",
+    "Z.ai weekly quota: %1 used, %2 today": "Z.ai 周额度：已用 %1，今日 %2"
   }
 }

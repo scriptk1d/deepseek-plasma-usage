@@ -28,6 +28,15 @@ What the numbers mean here:
 
 ### Added
 
+- **A twice-daily usage digest, and every reminder is a setting.** Besides
+  the reset warning, the widget now summarizes today's quota usage twice a
+  day at settable times ("Kimi weekly quota: 30% used, +5% today · Z.ai
+  weekly quota: 6% used, +2% today" — the today-figure is the day's movement
+  from the recorded trend). A "Reminders" section in the settings turns each
+  kind off, moves the reset warning's window (hours before) and bar (minimum
+  unused), and sets the digest's two clock times; defaults stay 24 h / 20% /
+  09:00 / 21:00, and day-stamps are local days.
+
 - **A desktop reminder when a weekly quota is about to reset with most of it
   unused.** Inside the last day of the Kimi or Z.ai weekly window, with more
   than 20% of the quota unused, the widget sends one notification a day

@@ -134,6 +134,18 @@
     "Quota trend": "कोटा रुझान",
     "Kimi weekly quota is about to reset": "Kimi साप्ताहिक कोटा फिर से सेट होने वाला है",
     "Z.ai weekly quota is about to reset": "Z.ai साप्ताहिक कोटा फिर से सेट होने वाला है",
-    "%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.": "साप्ताहिक कोटे का %1 अप्रयुक्त है और यह %2 में रीसेट होगा — दिन में लगभग %3 इसे पूरा खर्च कर देगा।"
+    "%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.": "साप्ताहिक कोटे का %1 अप्रयुक्त है और यह %2 में रीसेट होगा — दिन में लगभग %3 इसे पूरा खर्च कर देगा।",
+    "Reminders": "रिमाइंडर",
+    "Reset reminder:": "रीसेट रिमाइंडर:",
+    "Warn when a weekly quota is about to reset with much of it unused": "जब साप्ताहिक कोटा रीसेट होने वाला हो और अधिकांश अप्रयुक्त हो तो आगाह करें",
+    "Hours before reset:": "रीसेट से पहले घंटे:",
+    "Minimum unused (%):": "न्यूनतम अप्रयुक्त (%):",
+    "Daily digest:": "दैनिक सारांश:",
+    "Summarize today's quota usage twice a day": "दिन में दो बार आज के कोटा उपयोग का सारांश दें",
+    "First reminder time:": "पहला समय:",
+    "Second reminder time:": "दूसरा समय:",
+    "Today's usage": "आज का उपयोग",
+    "Kimi weekly quota: %1 used, %2 today": "Kimi साप्ताहिक कोटा: %1 उपयोग, आज %2",
+    "Z.ai weekly quota: %1 used, %2 today": "Z.ai साप्ताहिक कोटा: %1 उपयोग, आज %2"
   }
 }

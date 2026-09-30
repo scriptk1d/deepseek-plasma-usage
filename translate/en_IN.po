@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deepseek-usage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 16:36+0800\n"
-"PO-Revision-Date: 2026-09-30 16:36+0800\n"
+"POT-Creation-Date: 2026-09-30 16:52+0800\n"
+"PO-Revision-Date: 2026-09-30 16:52+0800\n"
 "Last-Translator: Unreviewed machine translation\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: en_IN\n"
@@ -332,6 +332,42 @@ msgstr "Z.ai API key status:"
 msgid "Z.ai base URL:"
 msgstr "Z.ai base URL:"
 
+#: contents/ui/ConfigGeneral.qml
+msgid "Reminders"
+msgstr "Reminders"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Reset reminder:"
+msgstr "Reset reminder:"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Warn when a weekly quota is about to reset with much of it unused"
+msgstr "Warn when a weekly quota is about to reset with much of it unused"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Hours before reset:"
+msgstr "Hours before reset:"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Minimum unused (%):"
+msgstr "Minimum unused (%):"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Daily digest:"
+msgstr "Daily digest:"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Summarize today's quota usage twice a day"
+msgstr "Summarize today's quota usage twice a day"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "First reminder time:"
+msgstr "First reminder time:"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Second reminder time:"
+msgstr "Second reminder time:"
+
 #: contents/ui/FullRepresentation.qml
 msgid "Today"
 msgstr "Today"
@@ -533,6 +569,18 @@ msgstr ""
 #: contents/ui/main.qml
 msgid "Z.ai weekly quota is about to reset"
 msgstr "Z.ai weekly quota is about to reset"
+
+#: contents/ui/main.qml
+msgid "Kimi weekly quota: %1 used, %2 today"
+msgstr "Kimi weekly quota: %1 used, %2 today"
+
+#: contents/ui/main.qml
+msgid "Z.ai weekly quota: %1 used, %2 today"
+msgstr "Z.ai weekly quota: %1 used, %2 today"
+
+#: contents/ui/main.qml
+msgid "Today's usage"
+msgstr "Today's usage"
 
 #: contents/ui/main.qml
 msgid "Kimi weekly usage: %1"

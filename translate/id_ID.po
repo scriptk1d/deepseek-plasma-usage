@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deepseek-usage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 16:36+0800\n"
-"PO-Revision-Date: 2026-09-30 16:36+0800\n"
+"POT-Creation-Date: 2026-09-30 16:52+0800\n"
+"PO-Revision-Date: 2026-09-30 16:52+0800\n"
 "Last-Translator: Unreviewed machine translation\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: id_ID\n"
@@ -329,6 +329,43 @@ msgstr "Status kunci API Z.ai:"
 msgid "Z.ai base URL:"
 msgstr "URL dasar Z.ai:"
 
+#: contents/ui/ConfigGeneral.qml
+msgid "Reminders"
+msgstr "Pengingat"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Reset reminder:"
+msgstr "Pengingat atur ulang:"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Warn when a weekly quota is about to reset with much of it unused"
+msgstr ""
+"Ingatkan saat kuota mingguan akan diatur ulang dengan sebagian besar belum terpakai"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Hours before reset:"
+msgstr "Jam sebelum diatur ulang:"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Minimum unused (%):"
+msgstr "Minimum belum terpakai (%):"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Daily digest:"
+msgstr "Ringkasan harian:"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Summarize today's quota usage twice a day"
+msgstr "Ringkas penggunaan kuota hari ini dua kali sehari"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "First reminder time:"
+msgstr "Waktu pertama:"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Second reminder time:"
+msgstr "Waktu kedua:"
+
 #: contents/ui/FullRepresentation.qml
 msgid "Today"
 msgstr "Hari ini"
@@ -530,6 +567,18 @@ msgstr ""
 #: contents/ui/main.qml
 msgid "Z.ai weekly quota is about to reset"
 msgstr "Kuota mingguan Z.ai akan segera diatur ulang"
+
+#: contents/ui/main.qml
+msgid "Kimi weekly quota: %1 used, %2 today"
+msgstr "Kuota mingguan Kimi: %1 terpakai, %2 hari ini"
+
+#: contents/ui/main.qml
+msgid "Z.ai weekly quota: %1 used, %2 today"
+msgstr "Kuota mingguan Z.ai: %1 terpakai, %2 hari ini"
+
+#: contents/ui/main.qml
+msgid "Today's usage"
+msgstr "Penggunaan hari ini"
 
 #: contents/ui/main.qml
 msgid "Kimi weekly usage: %1"

@@ -131,6 +131,18 @@
     "Quota trend": "Tren kuota",
     "Kimi weekly quota is about to reset": "Kuota mingguan Kimi akan segera diatur ulang",
     "Z.ai weekly quota is about to reset": "Kuota mingguan Z.ai akan segera diatur ulang",
-    "%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.": "%1 kuota mingguan belum terpakai dan akan diatur ulang dalam %2 — sekitar %3 per hari akan menghabiskannya."
+    "%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.": "%1 kuota mingguan belum terpakai dan akan diatur ulang dalam %2 — sekitar %3 per hari akan menghabiskannya.",
+    "Reminders": "Pengingat",
+    "Reset reminder:": "Pengingat atur ulang:",
+    "Warn when a weekly quota is about to reset with much of it unused": "Ingatkan saat kuota mingguan akan diatur ulang dengan sebagian besar belum terpakai",
+    "Hours before reset:": "Jam sebelum diatur ulang:",
+    "Minimum unused (%):": "Minimum belum terpakai (%):",
+    "Daily digest:": "Ringkasan harian:",
+    "Summarize today's quota usage twice a day": "Ringkas penggunaan kuota hari ini dua kali sehari",
+    "First reminder time:": "Waktu pertama:",
+    "Second reminder time:": "Waktu kedua:",
+    "Today's usage": "Penggunaan hari ini",
+    "Kimi weekly quota: %1 used, %2 today": "Kuota mingguan Kimi: %1 terpakai, %2 hari ini",
+    "Z.ai weekly quota: %1 used, %2 today": "Kuota mingguan Z.ai: %1 terpakai, %2 hari ini"
   }
 }

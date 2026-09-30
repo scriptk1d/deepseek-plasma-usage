@@ -134,6 +134,18 @@
     "Quota trend": "Tendencia de la cuota",
     "Kimi weekly quota is about to reset": "La cuota semanal de Kimi está a punto de restablecerse",
     "Z.ai weekly quota is about to reset": "La cuota semanal de Z.ai está a punto de restablecerse",
-    "%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.": "Queda %1 de la cuota semanal sin usar y se restablece en %2; con unos %3 al día se agotaría."
+    "%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.": "Queda %1 de la cuota semanal sin usar y se restablece en %2; con unos %3 al día se agotaría.",
+    "Reminders": "Recordatorios",
+    "Reset reminder:": "Aviso de restablecimiento:",
+    "Warn when a weekly quota is about to reset with much of it unused": "Avisar cuando una cuota semanal esté a punto de restablecerse con gran parte sin usar",
+    "Hours before reset:": "Horas antes del restablecimiento:",
+    "Minimum unused (%):": "Mínimo sin usar (%):",
+    "Daily digest:": "Resumen diario:",
+    "Summarize today's quota usage twice a day": "Resumir el uso de la cuota de hoy dos veces al día",
+    "First reminder time:": "Primera hora:",
+    "Second reminder time:": "Segunda hora:",
+    "Today's usage": "Uso de hoy",
+    "Kimi weekly quota: %1 used, %2 today": "Cuota semanal de Kimi: %1 usado, %2 hoy",
+    "Z.ai weekly quota: %1 used, %2 today": "Cuota semanal de Z.ai: %1 usado, %2 hoy"
   }
 }

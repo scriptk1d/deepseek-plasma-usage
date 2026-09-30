@@ -232,30 +232,81 @@ PlasmoidItem {
 
     function checkReminders() {
         var now = Date.now();
-        var day = Reminder.epochDay(now);
+        var offsetMs = -new Date().getTimezoneOffset() * 60000;
+        var day = Reminder.localDay(now, offsetMs);
+        var resetOpts = {
+            beforeMs: Math.max(1, Plasmoid.configuration.resetReminderHours) * 3600 * 1000,
+            minRemaining: Plasmoid.configuration.resetReminderPercent,
+            offsetMs: offsetMs
+        };
 
-        if (kimiClient.kimiOk && kimiClient.headline !== null) {
-            var used = kimiClient.headlineLimit > 0
-                ? (kimiClient.headlineUsed / kimiClient.headlineLimit) * 100
-                : NaN;
-            var v = Reminder.verdict(used, kimiClient.headline.resetAtMs, now);
-            if (Reminder.due(v, Plasmoid.configuration.kimiReminderDay, now)) {
-                sendReminder(i18n("Kimi weekly quota is about to reset"),
-                    i18n("%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.",
-                         v.remainingPercent + "%", v.msLeftText, v.perDayPercent + "%"));
-                Plasmoid.configuration.kimiReminderDay = day;
+        if (Plasmoid.configuration.resetReminderEnabled) {
+            if (kimiClient.kimiOk && kimiClient.headline !== null) {
+                var used = kimiClient.headlineLimit > 0
+                    ? (kimiClient.headlineUsed / kimiClient.headlineLimit) * 100
+                    : NaN;
+                var v = Reminder.verdict(used, kimiClient.headline.resetAtMs, now);
+                if (Reminder.due(v, Plasmoid.configuration.kimiReminderDay, now, resetOpts)) {
+                    sendReminder(i18n("Kimi weekly quota is about to reset"),
+                        i18n("%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.",
+                             v.remainingPercent + "%", v.msLeftText, v.perDayPercent + "%"));
+                    Plasmoid.configuration.kimiReminderDay = day;
+                }
+            }
+
+            var zaiRow = zaiClient.zaiOk ? zaiWeeklyRow() : null;
+            if (zaiRow !== null) {
+                var vz = Reminder.verdict(zaiRow.percent, zaiRow.resetAtMs, now);
+                if (Reminder.due(vz, Plasmoid.configuration.zaiReminderDay, now, resetOpts)) {
+                    sendReminder(i18n("Z.ai weekly quota is about to reset"),
+                        i18n("%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.",
+                             vz.remainingPercent + "%", vz.msLeftText, vz.perDayPercent + "%"));
+                    Plasmoid.configuration.zaiReminderDay = day;
+                }
             }
         }
 
-        var zaiRow = zaiClient.zaiOk ? zaiWeeklyRow() : null;
-        if (zaiRow !== null) {
-            var vz = Reminder.verdict(zaiRow.percent, zaiRow.resetAtMs, now);
-            if (Reminder.due(vz, Plasmoid.configuration.zaiReminderDay, now)) {
-                sendReminder(i18n("Z.ai weekly quota is about to reset"),
-                    i18n("%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.",
-                         vz.remainingPercent + "%", vz.msLeftText, vz.perDayPercent + "%"));
-                Plasmoid.configuration.zaiReminderDay = day;
+        if (Plasmoid.configuration.dailyDigestEnabled) {
+            checkDigest(now, offsetMs);
+        }
+    }
+
+    // The twice-daily "today's usage" digest. A slot with nothing to say
+    // (no provider data yet) is not stamped, so it fires later in the day
+    // when the data arrives rather than being silently skipped.
+    function checkDigest(now, offsetMs) {
+        var midnight = new Date();
+        midnight.setHours(0, 0, 0, 0);
+        var midnightSec = Math.floor(midnight.getTime() / 1000);
+        var slots = [
+            { minutes: Reminder.parseClock(Plasmoid.configuration.digestTime1), stamp: "digestDay1" },
+            { minutes: Reminder.parseClock(Plasmoid.configuration.digestTime2), stamp: "digestDay2" }
+        ];
+        for (var i = 0; i < slots.length; i++) {
+            var slot = slots[i];
+            if (!Reminder.digestDue(slot.minutes, now, offsetMs, Plasmoid.configuration[slot.stamp])) {
+                continue;
             }
+            var lines = [];
+            if (kimiClient.kimiOk && kimiClient.headline !== null && kimiClient.headlineLimit > 0) {
+                var pct = Math.round((kimiClient.headlineUsed / kimiClient.headlineLimit) * 100);
+                var delta = History.dailyDelta(usagePoints, "kimi", midnightSec, pct);
+                lines.push(i18n("Kimi weekly quota: %1 used, %2 today",
+                                pct + "%",
+                                delta === null ? "\u2014" : "+" + delta + "%"));
+            }
+            var zRow = zaiClient.zaiOk ? zaiWeeklyRow() : null;
+            if (zRow !== null) {
+                var zDelta = History.dailyDelta(usagePoints, "zai", midnightSec, zRow.percent);
+                lines.push(i18n("Z.ai weekly quota: %1 used, %2 today",
+                                zRow.percent + "%",
+                                zDelta === null ? "\u2014" : "+" + zDelta + "%"));
+            }
+            if (lines.length === 0) {
+                return;
+            }
+            sendReminder(i18n("Today's usage"), lines.join("\n"));
+            Plasmoid.configuration[slot.stamp] = Reminder.localDay(now, offsetMs);
         }
     }
 

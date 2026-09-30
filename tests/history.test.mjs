@@ -102,3 +102,23 @@ test("the cadence and the ceiling are pinned", () => {
     assert.equal(history.MIN_SPACING_SEC, 600);
     assert.equal(history.MAX_POINTS, 512);
 });
+
+test("dailyDelta measures since local midnight and clamps resets", () => {
+    const midnight = 100000;
+    const spacing = history.MIN_SPACING_SEC;
+    const points = [
+        [midnight - spacing, 10, 5],
+        [midnight, 12, 6],
+        [midnight + spacing, 15, null],
+        [midnight + 2 * spacing, 20, 9]
+    ];
+    assert.equal(history.dailyDelta(points, "kimi", midnight, 30), 18, "the value at midnight itself is the base");
+    // zai skips its gap: base 6, now 9.
+    assert.equal(history.dailyDelta(points, "zai", midnight, 9), 3);
+    // A mid-day reset drops the percentage: not negative usage.
+    assert.equal(history.dailyDelta(points, "kimi", midnight, 8), 0, "clamped, not -7");
+    // Nothing recorded today for kimi → unknown; a bad now value too.
+    assert.equal(history.dailyDelta([[midnight - spacing, 1, 1]], "kimi", midnight, 5), null);
+    assert.equal(history.dailyDelta(points, "kimi", midnight, NaN), null);
+    assert.equal(history.dailyDelta(points, "deepseek", midnight, 5), null);
+});
