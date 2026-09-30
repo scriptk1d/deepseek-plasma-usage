@@ -87,16 +87,65 @@ KCM.SimpleKCM {
         return [cfg_panelMetric];
     }
 
-    // Everything that is not in the list yet, for the picker to offer.
-    function availableMetrics() {
+    // The provider a metric belongs to, for the picker's submenus and the
+    // list's row labels. The brand names are existing catalogue entries;
+    // composing them here adds no new strings.
+    function providerLabelForMetric(id) {
+        if (id <= Fmt.METRIC_LIFETIME_COST) {
+            return i18n("DeepSeek");
+        }
+        if (id <= Fmt.METRIC_KIMI_QUOTA_LEFT) {
+            return i18n("Kimi Code");
+        }
+        return i18n("Z.ai");
+    }
+
+    // What one provider's submenu offers: the metrics of its id range that
+    // are not in the list yet, each carrying its own add action so menu
+    // delegates need nothing from the outer scope (the same reason
+    // removeCallback exists).
+    function addCallback(metricId) {
+        return function () {
+            page.addMetric(metricId);
+            page.configurationChanged();
+        };
+    }
+
+    function availableMetricsFor(providerIndex) {
+        var first = [Fmt.METRIC_BALANCE, Fmt.METRIC_KIMI_WEEKLY_USED, Fmt.METRIC_ZAI_WINDOW_USED][providerIndex];
+        var last = [Fmt.METRIC_LIFETIME_COST, Fmt.METRIC_KIMI_QUOTA_LEFT, Fmt.METRIC_ZAI_QUOTA_LEFT][providerIndex];
         var labels = metricLabels();
         var out = [];
-        for (var i = 0; i < labels.length; i++) {
+        for (var i = first; i <= last; i++) {
             if (stagedMetrics.indexOf(i) < 0) {
-                out.push({ id: i, label: labels[i] });
+                out.push({ id: i, label: labels[i], add: addCallback(i) });
             }
         }
         return out;
+    }
+
+    function removeCallback(metricId) {
+        return function () {
+            page.removeMetric(metricId);
+            page.configurationChanged();
+        };
+    }
+
+    // One entry per row of the composition list: the provider name plus the
+    // metric, and the action, so the delegate needs nothing from the outer
+    // scope.
+    function compositionEntries() {
+        var labels = metricLabels();
+        var entries = [];
+        for (var i = 0; i < stagedMetrics.length; i++) {
+            var id = stagedMetrics[i];
+            entries.push({
+                id: id,
+                label: providerLabelForMetric(id) + " — " + labels[id],
+                remove: removeCallback(id)
+            });
+        }
+        return entries;
     }
 
     function addMetric(id) {
@@ -110,30 +159,6 @@ KCM.SimpleKCM {
 
     function removeMetric(id) {
         stagedMetrics = stagedMetrics.filter(function (x) { return x !== id; });
-    }
-
-    // The remove-button callback for one metric id. Built here, in the page's
-    // scope, because a delegate that declares required properties does not see
-    // the outer scope's ids in this Qt (verified live: "page is not defined"
-    // on the row binding) — so the delegate gets a function that already
-    // closes over what it needs instead of naming `page` itself.
-    function removeCallback(metricId) {
-        return function () {
-            page.removeMetric(metricId);
-            page.configurationChanged();
-        };
-    }
-
-    // One entry per row of the composition list: the data plus the action, so
-    // the delegate needs nothing from the outer scope.
-    function compositionEntries() {
-        var labels = metricLabels();
-        var entries = [];
-        for (var i = 0; i < stagedMetrics.length; i++) {
-            var id = stagedMetrics[i];
-            entries.push({ id: id, label: labels[id], remove: removeCallback(id) });
-        }
-        return entries;
     }
 
     function saveConfig() {
@@ -271,27 +296,59 @@ KCM.SimpleKCM {
             Layout.fillWidth: true
             spacing: Kirigami.Units.smallSpacing
 
-            RowLayout {
+            // A button with a per-provider submenu: the provider name is the
+            // group, so every offered number says whose it is. The submenu
+            // items carry their own add actions (modelData), the same reason
+            // the list's remove buttons do.
+            QQC2.Button {
+                id: addButton
+
                 Layout.fillWidth: true
-                spacing: Kirigami.Units.smallSpacing
+                text: i18n("Add")
+                icon.name: "list-add"
+                enabled: page.availableMetricsFor(0).length + page.availableMetricsFor(1).length + page.availableMetricsFor(2).length > 0
+                onClicked: addMenu.popup(addButton, 0, addButton.height)
 
-                QQC2.ComboBox {
-                    id: metricPicker
+                QQC2.Menu {
+                    id: addMenu
 
-                    Layout.fillWidth: true
-                    model: page.availableMetrics()
-                    textRole: "label"
-                    valueRole: "id"
-                    enabled: count > 0
-                }
+                    QQC2.Menu {
+                        title: i18n("DeepSeek")
 
-                QQC2.Button {
-                    text: i18n("Add")
-                    icon.name: "list-add"
-                    enabled: metricPicker.count > 0
-                    onClicked: {
-                        page.addMetric(metricPicker.currentValue);
-                        page.configurationChanged();
+                        Instantiator {
+                            model: page.availableMetricsFor(0)
+                            delegate: QQC2.MenuItem {
+                                required property var modelData
+                                text: modelData.label
+                                onTriggered: modelData.add()
+                            }
+                        }
+                    }
+
+                    QQC2.Menu {
+                        title: i18n("Kimi Code")
+
+                        Instantiator {
+                            model: page.availableMetricsFor(1)
+                            delegate: QQC2.MenuItem {
+                                required property var modelData
+                                text: modelData.label
+                                onTriggered: modelData.add()
+                            }
+                        }
+                    }
+
+                    QQC2.Menu {
+                        title: i18n("Z.ai")
+
+                        Instantiator {
+                            model: page.availableMetricsFor(2)
+                            delegate: QQC2.MenuItem {
+                                required property var modelData
+                                text: modelData.label
+                                onTriggered: modelData.add()
+                            }
+                        }
                     }
                 }
             }

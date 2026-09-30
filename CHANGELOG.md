@@ -18,6 +18,12 @@ What the numbers mean here:
 
 ### Changed
 
+- **The panel's add picker is grouped by provider, and so is its list.** The
+  "Panel shows" picker is now an Add button whose menu splits the offered
+  numbers into DeepSeek / Kimi Code / Z.ai submenus — the provider name is
+  the group, not a guess from the label — and each row in the list below
+  reads "DeepSeek — Balance" style instead of a bare metric name.
+
 - **The popup's three providers now read as three sections.** Every section
   opens with the same header — the brand icon beside the provider's name,
   bolder and a touch larger than the table text (a shared ProviderHeader) —
