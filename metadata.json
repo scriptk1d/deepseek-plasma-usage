@@ -7,7 +7,7 @@
                 "Email": "cassidy@marble.sh"
             }
         ],
-        "BugReportUrl": "https://github.com/marble-sh/deepseek-plasma-usage/issues/new/choose",
+        "BugReportUrl": "https://github.com/scriptk1d/deepseek-plasma-usage/issues/new/choose",
         "Category": "System Information",
         "Description": "Shows API balance and usage for DeepSeek, Kimi Code and Z.ai",
         "Description[en_GB]": "Shows API balance and usage for DeepSeek, Kimi Code and Z.ai",
@@ -29,7 +29,7 @@
         "Name": "AI Usage",
         "Name[en_GB]": "AI Usage",
         "Version": "0.3.0",
-        "Website": "https://github.com/marble-sh/deepseek-plasma-usage"
+        "Website": "https://github.com/scriptk1d/deepseek-plasma-usage"
     },
     "X-Plasma-API-Minimum-Version": "6.0"
 }

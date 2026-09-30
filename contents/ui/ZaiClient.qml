@@ -1,5 +1,5 @@
 /*
-    SPDX-FileCopyrightText: 2026 cassidy
+    SPDX-FileCopyrightText: 2026 scriptk1d
     SPDX-License-Identifier: GPL-2.0-or-later
 
     Fetches Z.ai (GLM Coding Plan) usage: the quota rows from
