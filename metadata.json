@@ -28,7 +28,7 @@
         "License": "GPL-2.0+",
         "Name": "AI Usage",
         "Name[en_GB]": "AI Usage",
-        "Version": "0.3.0",
+        "Version": "0.4.0",
         "Website": "https://github.com/scriptk1d/deepseek-plasma-usage"
     },
     "X-Plasma-API-Minimum-Version": "6.0"

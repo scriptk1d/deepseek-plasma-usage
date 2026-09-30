@@ -14,6 +14,8 @@ What the numbers mean here:
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-09-30
+
 ### Changed
 
 - **The widget is now "AI Usage" (`sh.marble.ai.usage`), not "DeepSeek
