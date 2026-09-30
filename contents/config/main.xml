@@ -47,12 +47,6 @@
     <entry name="zaiBaseUrl" type="String">
       <default>https://api.z.ai</default>
     </entry>
-    <!-- The quota trend's recorded points: a compact JSON array written by
-         the applet itself (js/history.js), read by nobody else. Capped in
-         size there, so the entry cannot grow without bound. -->
-    <entry name="usageHistory" type="String">
-      <default></default>
-    </entry>
     <!-- The day (js/reminder.js epochDay) the weekly-quota reminder last went
          out per provider, so it fires at most once a day. -->
     <entry name="kimiReminderDay" type="Int">

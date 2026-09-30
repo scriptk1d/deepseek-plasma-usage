@@ -14,6 +14,18 @@ What the numbers mean here:
 
 ## [Unreleased]
 
+## [Unreleased]
+
+### Removed
+
+- **The quota trend is gone — chart and recording.** 0.4.0 recorded every
+  refresh's quota percentages and drew them in the popup; the line was noise
+  more than information and the bars did not change that, so the recording,
+  the canvas and the `usageHistory` configuration entry are removed rather
+  than shipped on unused. The twice-daily digest keeps its clock times and
+  reports each provider's current usage only, dropping the "today" figure
+  that only the recording could know.
+
 ## [0.4.0] - 2026-09-30
 
 ### Changed

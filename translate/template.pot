@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ai-usage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 16:52+0800\n"
+"POT-Creation-Date: 2026-10-01 00:38+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -481,10 +481,6 @@ msgid "Kimi Code"
 msgstr ""
 
 #: contents/ui/FullRepresentation.qml
-msgid "Quota trend"
-msgstr ""
-
-#: contents/ui/FullRepresentation.qml
 msgid "Z.ai"
 msgstr ""
 
@@ -551,11 +547,11 @@ msgid "Z.ai weekly quota is about to reset"
 msgstr ""
 
 #: contents/ui/main.qml
-msgid "Kimi weekly quota: %1 used, %2 today"
+msgid "Kimi weekly quota: %1 used"
 msgstr ""
 
 #: contents/ui/main.qml
-msgid "Z.ai weekly quota: %1 used, %2 today"
+msgid "Z.ai weekly quota: %1 used"
 msgstr ""
 
 #: contents/ui/main.qml

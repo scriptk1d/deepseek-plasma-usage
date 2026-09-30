@@ -15,7 +15,6 @@ import QtQuick.Controls
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.kirigami as Kirigami
 import "js/format.js" as Fmt
-import "js/history.js" as History
 
 Item {
     id: root
@@ -35,9 +34,6 @@ Item {
     property bool peakKnown: true
     property string peakStateText: ""
     property string peakRemainingText: ""
-
-    // The quota trend's recorded points (main.qml / js/history.js).
-    property var history: []
 
     signal refreshRequested()
 
@@ -146,11 +142,6 @@ Item {
 
     // The Kimi quota table: one row per quota (the weekly summary plus each
     // per-model limit), sharing one GridLayout so the columns line up.
-    // The quota trend's plottable series: percent of the headline quota over
-    // time, one line per provider, points where that provider had data.
-    readonly property var kimiTrend: History.series(history, "kimi")
-    readonly property var zaiTrend: History.series(history, "zai")
-
     readonly property var kimiCells: {
         var cells = [];
         var k = kimi;
@@ -738,25 +729,6 @@ Item {
                         }
                     }
                 }
-
-                // The recorded trend of the weekly quota's percentage. Two
-                // points is a line; fewer are not a trend yet.
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    visible: root.kimiTrend.length >= 2
-                    spacing: Kirigami.Units.smallSpacing
-
-                    PlasmaComponents.Label {
-                        text: i18n("Quota trend")
-                        font: Kirigami.Theme.smallFont
-                        opacity: 0.7
-                    }
-
-                    TrendCanvas {
-                        Layout.fillWidth: true
-                        series: root.kimiTrend
-                    }
-                }
             }
 
             // ------------------------------------------------------- z.ai
@@ -821,25 +793,6 @@ Item {
                             Layout.minimumWidth: 0
                             Layout.fillWidth: modelData.column === 0
                         }
-                    }
-                }
-
-                // The recorded trend of the 5-hour window's percentage — the
-                // sawtooth of it filling and resetting is what the line shows.
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    visible: root.zaiTrend.length >= 2
-                    spacing: Kirigami.Units.smallSpacing
-
-                    PlasmaComponents.Label {
-                        text: i18n("Quota trend")
-                        font: Kirigami.Theme.smallFont
-                        opacity: 0.7
-                    }
-
-                    TrendCanvas {
-                        Layout.fillWidth: true
-                        series: root.zaiTrend
                     }
                 }
 

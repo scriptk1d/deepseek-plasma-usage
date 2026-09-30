@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deepseek-usage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 16:52+0800\n"
-"PO-Revision-Date: 2026-09-30 16:52+0800\n"
+"POT-Creation-Date: 2026-10-01 00:38+0800\n"
+"PO-Revision-Date: 2026-10-01 00:38+0800\n"
 "Last-Translator: Unreviewed machine translation\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: es_CU\n"
@@ -494,10 +494,6 @@ msgid "Kimi Code"
 msgstr "Kimi Code"
 
 #: contents/ui/FullRepresentation.qml
-msgid "Quota trend"
-msgstr "Tendencia de la cuota"
-
-#: contents/ui/FullRepresentation.qml
 msgid "Z.ai"
 msgstr "Z.ai"
 
@@ -576,12 +572,12 @@ msgid "Z.ai weekly quota is about to reset"
 msgstr "La cuota semanal de Z.ai está a punto de restablecerse"
 
 #: contents/ui/main.qml
-msgid "Kimi weekly quota: %1 used, %2 today"
-msgstr "Cuota semanal de Kimi: %1 usado, %2 hoy"
+msgid "Kimi weekly quota: %1 used"
+msgstr "Cuota semanal de Kimi: %1 usado"
 
 #: contents/ui/main.qml
-msgid "Z.ai weekly quota: %1 used, %2 today"
-msgstr "Cuota semanal de Z.ai: %1 usado, %2 hoy"
+msgid "Z.ai weekly quota: %1 used"
+msgstr "Cuota semanal de Z.ai: %1 usado"
 
 #: contents/ui/main.qml
 msgid "Today's usage"

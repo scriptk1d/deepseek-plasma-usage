@@ -17,7 +17,6 @@ import org.kde.coreaddons as KCoreAddons
 import "js/wallet.js" as WalletJs
 import "js/format.js" as Fmt
 import "js/peak.js" as Peak
-import "js/history.js" as History
 import "js/reminder.js" as Reminder
 
 PlasmoidItem {
@@ -93,16 +92,7 @@ PlasmoidItem {
     property bool secretsInFlight: false
     property int loadedRevision: -1
 
-    // The quota trend's recorded points (js/history.js). Parsed once here
-    // and appended by recordUsage(); the config string is the only copy on
-    // disk, the property is the only copy in memory.
-    property var usagePoints: []
-
-    Component.onCompleted: {
-        usagePoints = History.parse(Plasmoid.configuration.usageHistory);
-        recordUsage();
-        reloadSecrets();
-    }
+    Component.onCompleted: root.reloadSecrets()
 
     Wallet {
         id: wallet
@@ -161,7 +151,6 @@ PlasmoidItem {
         peakStateText: root.peakStateText
         peakRemainingText: root.peakRemainingText
         numberLocale: root.numberLocale
-        history: root.usagePoints
 
         onRefreshRequested: root.refreshAll()
     }
@@ -170,26 +159,6 @@ PlasmoidItem {
         apiClient.refresh()
         kimiClient.refresh()
         zaiClient.refresh()
-    }
-
-    // Records one trend point whenever both a provider has data and the last
-    // point is stale enough (js/history.js decides "stale enough" and keeps
-    // the buffer capped). Only writes the config when something moved.
-    function recordUsage() {
-        var now = Math.floor(Date.now() / 1000);
-        var kimiPct = kimiClient.kimiOk && kimiClient.headlineLimit > 0
-            ? Math.round((kimiClient.headlineUsed / kimiClient.headlineLimit) * 100)
-            : null;
-        var zaiPct = zaiClient.zaiOk ? Math.round(zaiClient.headlinePercent) : null;
-        if (kimiPct === null && zaiPct === null) {
-            return;
-        }
-        var result = History.append(usagePoints, now, kimiPct, zaiPct);
-        if (!result.changed) {
-            return;
-        }
-        usagePoints = result.points;
-        Plasmoid.configuration.usageHistory = History.serialize(result.points);
     }
 
     // --- the weekly-quota reminder --------------------------------------
@@ -271,13 +240,10 @@ PlasmoidItem {
         }
     }
 
-    // The twice-daily "today's usage" digest. A slot with nothing to say
-    // (no provider data yet) is not stamped, so it fires later in the day
-    // when the data arrives rather than being silently skipped.
+    // The twice-daily usage digest. A slot with nothing to say (no provider
+    // data yet) is not stamped, so it fires later in the day when the data
+    // arrives rather than being silently skipped.
     function checkDigest(now, offsetMs) {
-        var midnight = new Date();
-        midnight.setHours(0, 0, 0, 0);
-        var midnightSec = Math.floor(midnight.getTime() / 1000);
         var slots = [
             { minutes: Reminder.parseClock(Plasmoid.configuration.digestTime1), stamp: "digestDay1" },
             { minutes: Reminder.parseClock(Plasmoid.configuration.digestTime2), stamp: "digestDay2" }
@@ -290,17 +256,11 @@ PlasmoidItem {
             var lines = [];
             if (kimiClient.kimiOk && kimiClient.headline !== null && kimiClient.headlineLimit > 0) {
                 var pct = Math.round((kimiClient.headlineUsed / kimiClient.headlineLimit) * 100);
-                var delta = History.dailyDelta(usagePoints, "kimi", midnightSec, pct);
-                lines.push(i18n("Kimi weekly quota: %1 used, %2 today",
-                                pct + "%",
-                                delta === null ? "\u2014" : "+" + delta + "%"));
+                lines.push(i18n("Kimi weekly quota: %1 used", pct + "%"));
             }
             var zRow = zaiClient.zaiOk ? zaiWeeklyRow() : null;
             if (zRow !== null) {
-                var zDelta = History.dailyDelta(usagePoints, "zai", midnightSec, zRow.percent);
-                lines.push(i18n("Z.ai weekly quota: %1 used, %2 today",
-                                zRow.percent + "%",
-                                zDelta === null ? "\u2014" : "+" + zDelta + "%"));
+                lines.push(i18n("Z.ai weekly quota: %1 used", zRow.percent + "%"));
             }
             if (lines.length === 0) {
                 return;
@@ -382,16 +342,13 @@ PlasmoidItem {
     }
 
     Timer {
-        // The trend recorder and the reminder check poll every minute; each
-        // decides for itself when there is something to do (History's
-        // spacing, Reminder's thresholds), so the timer stays a cheap poll.
+        // The reminder check polls every minute and decides for itself when
+        // there is something to do (Reminder's thresholds and stamps), so
+        // the timer stays a cheap poll.
         interval: 60000
         repeat: true
         running: true
-        onTriggered: {
-            root.recordUsage();
-            root.checkReminders();
-        }
+        onTriggered: root.checkReminders()
     }
 
     Plasmoid.contextualActions: [

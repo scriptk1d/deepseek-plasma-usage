@@ -128,7 +128,6 @@
     "DeepSeek": "DeepSeek",
     "All keys are stored in KWallet and never in the widget's configuration file.": "Semua kunci disimpan di KWallet dan tidak pernah di berkas konfigurasi widget.",
     "AI Usage": "Penggunaan AI",
-    "Quota trend": "Tren kuota",
     "Kimi weekly quota is about to reset": "Kuota mingguan Kimi akan segera diatur ulang",
     "Z.ai weekly quota is about to reset": "Kuota mingguan Z.ai akan segera diatur ulang",
     "%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.": "%1 kuota mingguan belum terpakai dan akan diatur ulang dalam %2 — sekitar %3 per hari akan menghabiskannya.",
@@ -142,7 +141,7 @@
     "First reminder time:": "Waktu pertama:",
     "Second reminder time:": "Waktu kedua:",
     "Today's usage": "Penggunaan hari ini",
-    "Kimi weekly quota: %1 used, %2 today": "Kuota mingguan Kimi: %1 terpakai, %2 hari ini",
-    "Z.ai weekly quota: %1 used, %2 today": "Kuota mingguan Z.ai: %1 terpakai, %2 hari ini"
+    "Kimi weekly quota: %1 used": "Kuota mingguan Kimi: %1 terpakai",
+    "Z.ai weekly quota: %1 used": "Kuota mingguan Z.ai: %1 terpakai"
   }
 }
