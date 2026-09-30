@@ -308,46 +308,50 @@ KCM.SimpleKCM {
                 icon.name: "list-add"
                 enabled: page.availableMetricsFor(0).length + page.availableMetricsFor(1).length + page.availableMetricsFor(2).length > 0
                 onClicked: addMenu.popup(addButton, 0, addButton.height)
+            }
+
+            // A sibling of the button, NOT a child: a Control's default
+            // property is its content, so a Menu declared inside the button
+            // would become its face and never open (verified live: the button
+            // rendered empty and nothing showed).
+            QQC2.Menu {
+                id: addMenu
 
                 QQC2.Menu {
-                    id: addMenu
+                    title: i18n("DeepSeek")
 
-                    QQC2.Menu {
-                        title: i18n("DeepSeek")
-
-                        Instantiator {
-                            model: page.availableMetricsFor(0)
-                            delegate: QQC2.MenuItem {
-                                required property var modelData
-                                text: modelData.label
-                                onTriggered: modelData.add()
-                            }
+                    Instantiator {
+                        model: page.availableMetricsFor(0)
+                        delegate: QQC2.MenuItem {
+                            required property var modelData
+                            text: modelData.label
+                            onTriggered: modelData.add()
                         }
                     }
+                }
 
-                    QQC2.Menu {
-                        title: i18n("Kimi Code")
+                QQC2.Menu {
+                    title: i18n("Kimi Code")
 
-                        Instantiator {
-                            model: page.availableMetricsFor(1)
-                            delegate: QQC2.MenuItem {
-                                required property var modelData
-                                text: modelData.label
-                                onTriggered: modelData.add()
-                            }
+                    Instantiator {
+                        model: page.availableMetricsFor(1)
+                        delegate: QQC2.MenuItem {
+                            required property var modelData
+                            text: modelData.label
+                            onTriggered: modelData.add()
                         }
                     }
+                }
 
-                    QQC2.Menu {
-                        title: i18n("Z.ai")
+                QQC2.Menu {
+                    title: i18n("Z.ai")
 
-                        Instantiator {
-                            model: page.availableMetricsFor(2)
-                            delegate: QQC2.MenuItem {
-                                required property var modelData
-                                text: modelData.label
-                                onTriggered: modelData.add()
-                            }
+                    Instantiator {
+                        model: page.availableMetricsFor(2)
+                        delegate: QQC2.MenuItem {
+                            required property var modelData
+                            text: modelData.label
+                            onTriggered: modelData.add()
                         }
                     }
                 }
