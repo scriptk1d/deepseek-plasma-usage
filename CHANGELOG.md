@@ -28,6 +28,16 @@ What the numbers mean here:
 
 ### Added
 
+- **A desktop reminder when a weekly quota is about to reset with most of it
+  unused.** Inside the last day of the Kimi or Z.ai weekly window, with more
+  than 20% of the quota unused, the widget sends one notification a day
+  suggesting the per-day pace that would spend the rest on time ("60% unused,
+  resets in 23h — about 63% per day would use it up"). The decision logic is
+  js/reminder.js, thresholds pinned by tests; the notification goes through
+  `notify-send` (the one binary this adds — absent means no reminder, never a
+  broken widget), and the day it last fired is stored per provider so it
+  cannot nag.
+
 - **The Kimi and Z.ai sections record a quota trend.** Every refresh (at most
   one point per ten minutes, 512 points — about three and a half days) writes
   the headline quota's percentage to the applet configuration, and each

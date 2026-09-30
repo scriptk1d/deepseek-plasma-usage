@@ -224,13 +224,18 @@ test("parseUsagePayload reproduces the recorded live probe", () => {
     assert.equal(r.ok, true);
     assert.equal(r.summary.used, 3);
     assert.equal(r.summary.limit, 100);
-    // 05:03:43Z is 02:03:43 at the fixed GMT-3 this file pins.
+    // 05:03:43Z is 02:03:43 at the fixed GMT-3 this file pins; from 04:15Z
+    // that is two days and 48 minutes away (a zero hour count is omitted).
     assert.equal(r.summary.resetAtText, "10-02 02:03");
+    assert.equal(r.summary.countdown, "2d 48m");
+    // The raw reset time the weekly-quota reminder decides on.
+    assert.ok(r.summary.resetAtMs > NOW, "resetAtMs is the future moment");
     assert.equal(r.limits.length, 1);
     assert.equal(r.limits[0].window, "5h");
     // detail carries only `remaining`: used is 100 - 100.
     assert.equal(r.limits[0].used, 0);
     assert.equal(r.limits[0].resetAtText, "09-30 01:03");
+    assert.equal(r.limits[0].resetAtMs, Date.parse("2026-09-30T04:03:43.670Z"), "resetAtMs parsed from the payload");
 });
 
 test("the kimi wallet entry is distinct from the deepseek ones", () => {

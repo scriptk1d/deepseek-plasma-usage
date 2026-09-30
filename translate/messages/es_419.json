@@ -131,6 +131,9 @@
     "DeepSeek": "DeepSeek",
     "All keys are stored in KWallet and never in the widget's configuration file.": "Todas las claves se guardan en KWallet y nunca en el archivo de configuración del widget.",
     "AI Usage": "Uso de IA",
-    "Quota trend": "Tendencia de la cuota"
+    "Quota trend": "Tendencia de la cuota",
+    "Kimi weekly quota is about to reset": "La cuota semanal de Kimi está a punto de restablecerse",
+    "Z.ai weekly quota is about to reset": "La cuota semanal de Z.ai está a punto de restablecerse",
+    "%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.": "Queda %1 de la cuota semanal sin usar y se restablece en %2; con unos %3 al día se agotaría."
   }
 }

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deepseek-usage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 16:21+0800\n"
-"PO-Revision-Date: 2026-09-30 16:21+0800\n"
+"POT-Creation-Date: 2026-09-30 16:36+0800\n"
+"PO-Revision-Date: 2026-09-30 16:36+0800\n"
 "Last-Translator: Unreviewed machine translation\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr_FR\n"
@@ -522,6 +522,20 @@ msgstr "Heures creuses"
 msgctxt "DeepSeek's peak or off-peak rate cannot be determined"
 msgid "Unknown"
 msgstr "Inconnu"
+
+#: contents/ui/main.qml
+msgid "Kimi weekly quota is about to reset"
+msgstr "Le quota hebdomadaire Kimi est sur le point d’être réinitialisé"
+
+#: contents/ui/main.qml
+msgid ""
+"%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up."
+msgstr ""
+"Il reste %1 du quota hebdomadaire inutilisé et il se réinitialise dans %2 — environ %3 par jour suffirait à l’épuiser."
+
+#: contents/ui/main.qml
+msgid "Z.ai weekly quota is about to reset"
+msgstr "Le quota hebdomadaire Z.ai est sur le point d’être réinitialisé"
 
 #: contents/ui/main.qml
 msgid "Kimi weekly usage: %1"

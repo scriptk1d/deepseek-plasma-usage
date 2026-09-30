@@ -16,6 +16,10 @@ usage — DeepSeek, Kimi Code and Z.ai — in the panel, with a detailed popup.
 - **Popup:** balance, today/period/lifetime spend, an estimated "days left",
   in/out/cached tokens and request counts, a daily-spend sparkline and a
   per-API-key breakdown.
+- **Quota trend and reminders:** the Kimi and Z.ai sections record the quota
+  percentage over time and draw it, and a desktop notification (via
+  `notify-send`) warns when a weekly quota is within a day of resetting with
+  more than 20% unused, suggesting the per-day pace that would spend it.
 - **Secrets live in KWallet**, never in the widget's configuration file.
 - **No runtime dependencies** beyond Plasma and Qt: network access is QML
   `XMLHttpRequest`, parsing is plain JavaScript, and KWallet is reached through

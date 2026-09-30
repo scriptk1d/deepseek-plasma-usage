@@ -144,6 +144,7 @@ function resetInfo(data, nowMs) {
         var dt = parseDate(resetAt);
         if (dt !== null && !isNaN(dt.getTime())) {
             return {
+                resetAtMs: dt.getTime(),
                 resetAtText: clockStamp(dt),
                 countdown: countdownText(dt.getTime() - now)
             };
@@ -152,6 +153,7 @@ function resetInfo(data, nowMs) {
     var resetIn = toInt(data.reset_in);
     if (resetIn !== null) {
         return {
+            resetAtMs: now + resetIn * 1000,
             resetAtText: clockStamp(new Date(now + resetIn * 1000)),
             countdown: countdownText(resetIn * 1000)
         };
@@ -231,6 +233,7 @@ function makeRow(kind, source, window, nowMs) {
         window: window,
         used: amounts.used,
         limit: amounts.limit,
+        resetAtMs: reset ? reset.resetAtMs : 0,
         resetAtText: reset ? reset.resetAtText : "",
         countdown: reset ? reset.countdown : ""
     };

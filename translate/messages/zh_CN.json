@@ -128,6 +128,9 @@
     "DeepSeek": "DeepSeek",
     "All keys are stored in KWallet and never in the widget's configuration file.": "所有密钥都保存在 KWallet 中，绝不会写入小部件的配置文件。",
     "AI Usage": "AI 用量",
-    "Quota trend": "额度趋势"
+    "Quota trend": "额度趋势",
+    "Kimi weekly quota is about to reset": "Kimi 周额度即将重置",
+    "Z.ai weekly quota is about to reset": "Z.ai 周额度即将重置",
+    "%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.": "周额度还有 %1 未使用，将在 %2 后重置——每天用约 %3 可以用完。"
   }
 }

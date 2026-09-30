@@ -12,11 +12,13 @@ import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.plasma5support as P5Support
 import org.kde.coreaddons as KCoreAddons
 import "js/wallet.js" as WalletJs
 import "js/format.js" as Fmt
 import "js/peak.js" as Peak
 import "js/history.js" as History
+import "js/reminder.js" as Reminder
 
 PlasmoidItem {
     id: root
@@ -190,6 +192,73 @@ PlasmoidItem {
         Plasmoid.configuration.usageHistory = History.serialize(result.points);
     }
 
+    // --- the weekly-quota reminder --------------------------------------
+    // Sends at most one notification per provider per day, only inside the
+    // last day of a weekly quota's window and only when more than a fifth of
+    // it is still unused (js/reminder.js owns the thresholds). The
+    // notification itself goes through notify-send — the one binary this
+    // adds, and its absence just means no reminder, never a broken widget.
+    property int _notifySeq: 0
+
+    readonly property P5Support.DataSource _notifySource: P5Support.DataSource {
+        engine: "executable"
+        connectedSources: []
+        onNewData: (sourceName, data) => _notifySource.disconnectSource(sourceName)
+    }
+
+    function sendReminder(title, body) {
+        _notifySeq += 1;
+        // The unique trailing comment makes repeated sends a fresh source,
+        // exactly like the wallet bridge's commands.
+        var command = "notify-send -t 60000 -a " + WalletJs.shellQuote(i18n("AI Usage")) +
+            " -i office-chart-bar " + WalletJs.shellQuote(title) + " " + WalletJs.shellQuote(body) +
+            " # " + _notifySeq;
+        _notifySource.connectedSources = [command];
+    }
+
+    // The Z.ai weekly row: the quota whose span is measured in weeks ("1w").
+    function zaiWeeklyRow() {
+        var rows = zaiClient.quotaRows;
+        if (rows === null) {
+            return null;
+        }
+        for (var i = 0; i < rows.length; i++) {
+            if (/w$/.test(rows[i].span)) {
+                return rows[i];
+            }
+        }
+        return null;
+    }
+
+    function checkReminders() {
+        var now = Date.now();
+        var day = Reminder.epochDay(now);
+
+        if (kimiClient.kimiOk && kimiClient.headline !== null) {
+            var used = kimiClient.headlineLimit > 0
+                ? (kimiClient.headlineUsed / kimiClient.headlineLimit) * 100
+                : NaN;
+            var v = Reminder.verdict(used, kimiClient.headline.resetAtMs, now);
+            if (Reminder.due(v, Plasmoid.configuration.kimiReminderDay, now)) {
+                sendReminder(i18n("Kimi weekly quota is about to reset"),
+                    i18n("%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.",
+                         v.remainingPercent + "%", v.msLeftText, v.perDayPercent + "%"));
+                Plasmoid.configuration.kimiReminderDay = day;
+            }
+        }
+
+        var zaiRow = zaiClient.zaiOk ? zaiWeeklyRow() : null;
+        if (zaiRow !== null) {
+            var vz = Reminder.verdict(zaiRow.percent, zaiRow.resetAtMs, now);
+            if (Reminder.due(vz, Plasmoid.configuration.zaiReminderDay, now)) {
+                sendReminder(i18n("Z.ai weekly quota is about to reset"),
+                    i18n("%1 of the weekly quota is unused and it resets in %2 — about %3 per day would use it up.",
+                         vz.remainingPercent + "%", vz.msLeftText, vz.perDayPercent + "%"));
+                Plasmoid.configuration.zaiReminderDay = day;
+            }
+        }
+    }
+
     Plasmoid.title: i18n("AI Usage")
     Plasmoid.backgroundHints: PlasmaCore.Types.DefaultBackground | PlasmaCore.Types.ConfigurableBackground
     Plasmoid.busy: (apiClient.loading || kimiClient.loading || zaiClient.loading)
@@ -262,13 +331,16 @@ PlasmoidItem {
     }
 
     Timer {
-        // The trend recorder checks every minute but only appends when the
-        // spacing allows (History.MIN_SPACING_SEC), so the timer is a cheap
-        // poll and the config write happens a handful of times an hour.
+        // The trend recorder and the reminder check poll every minute; each
+        // decides for itself when there is something to do (History's
+        // spacing, Reminder's thresholds), so the timer stays a cheap poll.
         interval: 60000
         repeat: true
         running: true
-        onTriggered: root.recordUsage()
+        onTriggered: {
+            root.recordUsage();
+            root.checkReminders();
+        }
     }
 
     Plasmoid.contextualActions: [
