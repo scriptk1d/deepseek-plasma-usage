@@ -320,7 +320,7 @@ KCM.SimpleKCM {
                 QQC2.Menu {
                     title: i18n("DeepSeek")
 
-                    Instantiator {
+                    Repeater {
                         model: page.availableMetricsFor(0)
                         delegate: QQC2.MenuItem {
                             required property var modelData
@@ -333,7 +333,7 @@ KCM.SimpleKCM {
                 QQC2.Menu {
                     title: i18n("Kimi Code")
 
-                    Instantiator {
+                    Repeater {
                         model: page.availableMetricsFor(1)
                         delegate: QQC2.MenuItem {
                             required property var modelData
@@ -346,7 +346,7 @@ KCM.SimpleKCM {
                 QQC2.Menu {
                     title: i18n("Z.ai")
 
-                    Instantiator {
+                    Repeater {
                         model: page.availableMetricsFor(2)
                         delegate: QQC2.MenuItem {
                             required property var modelData
