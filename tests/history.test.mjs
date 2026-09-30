@@ -103,6 +103,76 @@ test("the cadence and the ceiling are pinned", () => {
     assert.equal(history.MAX_POINTS, 512);
 });
 
+test("chartBars buckets the trend into evenly spaced slots, freshest wins", () => {
+    const spacing = history.MIN_SPACING_SEC;
+    const t0 = 1000000;
+    // Three points inside one 10-minute slot, then a point an hour on.
+    const points = [
+        [t0, 10, null],
+        [t0 + 2 * 60, 20, null],
+        [t0 + 5 * 60, 30, null],
+        [t0 + 3600, 40, null]
+    ];
+    const chart = history.chartBars(points, "kimi", 40);
+    // The span (~1h) at 40 slots asks for a ~90s bucket; the first nice
+    // bucket at or above that is 10 minutes.
+    assert.equal(chart.bucketSec, 600);
+    assert.equal(chart.bars.length, 3, "one bar per occupied slot, not per point");
+    // t0 sits 400s into its 600s bucket, so the +5m point falls into the
+    // next one: slots hold {10,20}, {30} and the hour-later {40}.
+    assert.equal(chart.bars[0].v, 20, "the freshest value in the first slot");
+    assert.equal(chart.bars[1].v, 30);
+    assert.equal(chart.bars[2].v, 40, "the later point lands in its own slot");
+    // Slots are the bucket starts; the canvas places them by
+    // (t - first)/bucketSec, so time gaps between bars survive.
+    assert.equal(chart.bars[2].t - chart.bars[0].t, 3600);
+
+    // A gap of empty slots between observations is preserved in the slot
+    // starts (the canvas leaves those positions empty, like the DeepSeek
+    // chart's zero-cost days).
+    const gapped = history.chartBars(
+        [
+            [t0, 5, null],
+            [t0 + 3 * 600, 9, null]
+        ],
+        "kimi",
+        40
+    );
+    assert.equal(gapped.bars.length, 2);
+    assert.equal(gapped.bars[1].t - gapped.bars[0].t, 3 * 600);
+
+    // A long span picks a coarser bucket: ~2 days at 40 slots wants ~72min,
+    // so 10800 (3h) is the first nice bucket above it.
+    const day = 86400;
+    const long = history.chartBars(
+        [
+            [0, 1, null],
+            [2 * day, 50, null]
+        ],
+        "kimi",
+        40
+    );
+    assert.equal(long.bucketSec, 10800);
+
+    assert.deepEqual(
+        { bucketSec: history.chartBars([], "kimi", 40).bucketSec, n: history.chartBars([], "kimi", 40).bars.length },
+        { bucketSec: 0, n: 0 },
+        "an empty series has no chart"
+    );
+    // Zero percentages are kept as bars of value 0 — the canvas leaves those
+    // slots empty, the DeepSeek chart's zero-cost days.
+    const zeros = history.chartBars(
+        [
+            [t0, 0, null],
+            [t0 + spacing, 7, null]
+        ],
+        "kimi",
+        40
+    );
+    assert.equal(zeros.bars[0].v, 0);
+    assert.equal(zeros.bars[1].v, 7);
+});
+
 test("dailyDelta measures since local midnight and clamps resets", () => {
     const midnight = 100000;
     const spacing = history.MIN_SPACING_SEC;

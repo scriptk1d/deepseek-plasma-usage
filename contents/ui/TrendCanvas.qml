@@ -2,22 +2,26 @@
     SPDX-FileCopyrightText: 2026 scriptk1d
     SPDX-License-Identifier: GPL-2.0-or-later
 
-    A percent-over-time line for the quota trend: 0% at the bottom edge,
-    100% at a hairline under the top, points placed by their timestamp
-    across the recorded span. Used by the Kimi and Z.ai sections of the
-    popup with the series js/history.js builds (points where that provider
-    had data).
+    The quota trend, drawn the way the popup's DeepSeek daily-spend chart is:
+    one bar per time slot on a bottom axis, the freshest observation in each
+    slot (js/history.js chartBars), the height the percentage against a full
+    quota. Used by the Kimi and Z.ai sections with the series the recorded
+    history builds.
 */
 import QtQuick
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
+import "js/history.js" as History
 
 Canvas {
     id: canvas
 
     property var series: []
+    // The density cap the bars are bucketed to; 40 matches the DeepSeek
+    // chart's look at the popup's width.
+    property int maxSlots: 40
 
-    readonly property color lineColor: Kirigami.Theme.highlightColor
+    readonly property color barColor: Kirigami.Theme.highlightColor
     readonly property color axisColor: Qt.rgba(Kirigami.Theme.textColor.r,
                                                Kirigami.Theme.textColor.g,
                                                Kirigami.Theme.textColor.b,
@@ -28,7 +32,7 @@ Canvas {
     onSeriesChanged: requestPaint()
     onWidthChanged: requestPaint()
     onHeightChanged: requestPaint()
-    onLineColorChanged: requestPaint()
+    onBarColorChanged: requestPaint()
     onAxisColorChanged: requestPaint()
 
     onPaint: {
@@ -42,36 +46,26 @@ Canvas {
         ctx.lineTo(width, height - 0.5);
         ctx.stroke();
 
-        var list = series || [];
-        if (list.length < 2) {
+        var chart = History.chartBars(series, maxSlots);
+        var bars = chart.bars;
+        if (bars.length === 0) {
             return;
         }
-        var t0 = list[0].t;
-        var t1 = list[list.length - 1].t;
-        var span = t1 - t0;
-        if (span <= 0) {
-            span = 1;
-        }
-        // The 100% ceiling is a hairline, so a full quota reads as touching
-        // it rather than being clipped at the canvas edge.
-        ctx.strokeStyle = Qt.rgba(axisColor.r, axisColor.g, axisColor.b, 0.6);
-        ctx.beginPath();
-        ctx.moveTo(0, 1.5);
-        ctx.lineTo(width, 1.5);
-        ctx.stroke();
-
-        ctx.strokeStyle = lineColor;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        for (var i = 0; i < list.length; i++) {
-            var x = 1 + ((list[i].t - t0) / span) * (width - 2);
-            var y = (height - 2) * (1 - Math.max(0, Math.min(100, list[i].v)) / 100) + 1;
-            if (i === 0) {
-                ctx.moveTo(x, y);
-            } else {
-                ctx.lineTo(x, y);
+        // One slot per bucket across the recorded span, each bar placed by
+        // its bucket's offset from the first — the DeepSeek chart's geometry,
+        // so time gaps between observations survive instead of collapsing.
+        var totalSlots = Math.max(1, Math.round((bars[bars.length - 1].t - bars[0].t) / chart.bucketSec) + 1);
+        var slot = width / totalSlots;
+        var barWidth = Math.max(1, slot * 0.7);
+        ctx.fillStyle = barColor;
+        for (var i = 0; i < bars.length; i++) {
+            if (bars[i].v === 0) {
+                continue;
             }
+            var index = Math.round((bars[i].t - bars[0].t) / chart.bucketSec);
+            var barHeight = Math.max(1, Math.round((height - 2) * (Math.max(0, Math.min(100, bars[i].v)) / 100)));
+            var x = index * slot + (slot - barWidth) / 2;
+            ctx.fillRect(x, height - 1 - barHeight, barWidth, barHeight);
         }
-        ctx.stroke();
     }
 }

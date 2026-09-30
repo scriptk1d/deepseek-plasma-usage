@@ -28,6 +28,11 @@ var MIN_SPACING_SEC = 600;
 // Column of each provider's value inside a point.
 var KEYS = { kimi: 1, zai: 2 };
 
+// The bar chart's slot widths, coarsest last: one of these is the first that
+// keeps the recorded span under ~40 bars (the DeepSeek daily-spend chart's
+// density), so minutes of points never turn into hairline bars.
+var NICE_BUCKETS = [600, 1800, 3600, 10800, 21600, 43200, 86400, 172800];
+
 function clampPercent(value) {
     var n = typeof value === "number" ? value : parseFloat(value);
     if (!isFinite(n)) {
@@ -142,4 +147,51 @@ function dailyDelta(points, key, midnightSec, nowValue) {
         return null;
     }
     return Math.max(0, Math.round(nowValue - base));
+}
+
+/*
+    The trend as the popup's bar chart wants it: the provider's series
+    quantised into fixed-width slots, one bar per slot carrying the freshest
+    observation inside it ({t: slotStart, v}), oldest first. Bars are spaced
+    evenly by slot the way the DeepSeek daily-spend chart is, rather than by
+    each point's own timestamp — a 10-minute cluster would otherwise draw as
+    one fat smear next to hours of nothing.
+
+    Returns { bucketSec, bars }; bucketSec 0 with no bars for an empty
+    series. maxSlots caps the density (default 40).
+*/
+function chartBars(points, key, maxSlots) {
+    var list = series(points, key);
+    if (list.length === 0) {
+        return { bucketSec: 0, bars: [] };
+    }
+    var span = list[list.length - 1].t - list[0].t;
+    var wanted = Math.max(NICE_BUCKETS[0], span / Math.max(1, maxSlots || 40));
+    var bucketSec = NICE_BUCKETS[NICE_BUCKETS.length - 1];
+    for (var n = 0; n < NICE_BUCKETS.length; n++) {
+        if (NICE_BUCKETS[n] >= wanted) {
+            bucketSec = NICE_BUCKETS[n];
+            break;
+        }
+    }
+
+    var bySlot = {};
+    var slots = [];
+    for (var i = 0; i < list.length; i++) {
+        var slot = Math.floor(list[i].t / bucketSec) * bucketSec;
+        // Last value in the slot wins: series is oldest-first, so overwrite.
+        if (!Object.prototype.hasOwnProperty.call(bySlot, slot)) {
+            slots.push(slot);
+        }
+        bySlot[slot] = list[i].v;
+    }
+    slots.sort(function (a, b) {
+        return a - b;
+    });
+
+    var bars = [];
+    for (var s = 0; s < slots.length; s++) {
+        bars.push({ t: slots[s], v: bySlot[slots[s]] });
+    }
+    return { bucketSec: bucketSec, bars: bars };
 }
