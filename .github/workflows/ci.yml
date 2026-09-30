@@ -137,4 +137,4 @@ jobs:
       - name: Build the distribution archive
         run: |
           ./install.sh --pack
-          test -s deepseek-usage.plasmoid
+          test -s ai-usage.plasmoid

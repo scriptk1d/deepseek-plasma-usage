@@ -50,7 +50,7 @@ jobs:
       - name: Build the plasmoid
         run: |
           ./install.sh --pack
-          test -s deepseek-usage.plasmoid
+          test -s ai-usage.plasmoid
 
       - name: Notes from the changelog
         run: scripts/release-notes.sh "${GITHUB_REF_NAME#v}" > "$RUNNER_TEMP/notes.md"
@@ -60,7 +60,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$GITHUB_REF_NAME" \
-            deepseek-usage.plasmoid \
+            ai-usage.plasmoid \
             --title "$GITHUB_REF_NAME" \
             --notes-file "$RUNNER_TEMP/notes.md" \
             --verify-tag
