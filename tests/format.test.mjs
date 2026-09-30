@@ -3,6 +3,7 @@
 */
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync, existsSync } from "node:fs";
 import { load } from "./load.mjs";
 
 const fmt = load("contents/ui/js/format.js");
@@ -91,10 +92,112 @@ test("metricText falls back to balance and marks missing lifetime data", () => {
     assert.equal(fmt.metricText(fmt.METRIC_LIFETIME_COST, { currency: "USD", hasLifetime: false }), "\u2014");
 });
 
+test("metricText renders the Kimi quota metrics", () => {
+    const kimi = Object.assign({}, metricValues, {
+        hasKimi: true,
+        kimiWeeklyUsed: 18934776,
+        kimiWeeklyLimit: 51200000
+    });
+    assert.equal(fmt.metricText(fmt.METRIC_KIMI_WEEKLY_USED, kimi), "37%");
+    assert.equal(fmt.metricText(fmt.METRIC_KIMI_QUOTA_LEFT, kimi), "32.3M");
+    // No quota behind the metric: a dash, not a zero.
+    assert.equal(fmt.metricText(fmt.METRIC_KIMI_WEEKLY_USED, { hasKimi: false }), "\u2014");
+    assert.equal(fmt.metricText(fmt.METRIC_KIMI_QUOTA_LEFT, { hasKimi: false }), "\u2014");
+    assert.equal(
+        fmt.metricText(fmt.METRIC_KIMI_WEEKLY_USED, { hasKimi: true, kimiWeeklyUsed: 1, kimiWeeklyLimit: 0 }),
+        "\u2014"
+    );
+});
+
+test("metricText renders the Z.ai percent metrics", () => {
+    const zai = Object.assign({}, metricValues, { hasZai: true, zaiPercent: 27 });
+    assert.equal(fmt.metricText(fmt.METRIC_ZAI_WINDOW_USED, zai), "27%");
+    assert.equal(fmt.metricText(fmt.METRIC_ZAI_QUOTA_LEFT, zai), "73%");
+    // No quota behind the metric: a dash, not a zero.
+    assert.equal(fmt.metricText(fmt.METRIC_ZAI_WINDOW_USED, { hasZai: false }), "\u2014");
+    assert.equal(fmt.metricText(fmt.METRIC_ZAI_QUOTA_LEFT, { hasZai: false }), "\u2014");
+    // A fraction rounds, and the left-over share can never go below zero.
+    assert.equal(fmt.metricText(fmt.METRIC_ZAI_WINDOW_USED, { hasZai: true, zaiPercent: 27.4 }), "27%");
+    assert.equal(fmt.metricText(fmt.METRIC_ZAI_QUOTA_LEFT, { hasZai: true, zaiPercent: 99.6 }), "0%");
+});
+
+/*
+    The two sentinels are not settings entries any more: 9 was the fixed
+    "all providers" mode the checkbox list replaces, and 10 is what an
+    unchecked list stores ("icon only"), so an explicit empty choice survives
+    a restart. Their numbers are load-bearing either way — they must stay
+    behind every per-provider metric, and the config entry that stores the
+    composition must exist beside them.
+*/
+test("the composition sentinels sit after every per-provider metric", () => {
+    assert.equal(fmt.METRIC_ALL_PROVIDERS, 9);
+    assert.equal(fmt.METRIC_ICON_ONLY, 10);
+    assert.ok(fmt.METRIC_ALL_PROVIDERS > fmt.METRIC_ZAI_QUOTA_LEFT);
+    assert.ok(fmt.METRIC_ICON_ONLY > fmt.METRIC_ALL_PROVIDERS);
+
+    // One value, three homes again: the StringList the settings write, the
+    // legacy Int they fall back to, and the constants both interpret.
+    const xml = readFileSync(new URL("../contents/config/main.xml", import.meta.url), "utf8");
+    assert.match(xml, /<entry name="panelMetrics" type="StringList">/, "main.xml has the panelMetrics StringList");
+    assert.match(xml, /<entry name="panelMetric" type="Int">/, "main.xml keeps the legacy panelMetric Int");
+});
+
+/*
+    Each provider icon ships as two files — a black glyph for light themes and
+    a "-dark" white one — because currentColor resolves to plain black in a
+    QML Image and would vanish on a dark panel. The names, the variant picker
+    and the per-brand optical scale are pinned here: swapping art must not
+    require touching QML, a renamed file would silently render as nothing,
+    and the full-width Z.ai diagonal needs a smaller box than the solid
+    letterforms to read as the same weight.
+*/
+test("provider icon names are pinned, both variants exist, and the picker is total", () => {
+    // Field by field: the table comes from a vm realm (see api.test.mjs).
+    assert.equal(fmt.PROVIDER_ICONS.deepseek.path, "../icons/deepseek.svg");
+    assert.equal(fmt.PROVIDER_ICONS.kimi.path, "../icons/kimi.svg");
+    assert.equal(fmt.PROVIDER_ICONS.zai.path, "../icons/zai.svg");
+    assert.equal(Object.keys(fmt.PROVIDER_ICONS).length, 3, "no unnamed provider icons");
+
+    // Every scale is a sane multiplier, and the wide diagonal scales down.
+    for (const name of Object.keys(fmt.PROVIDER_ICONS)) {
+        const scale = fmt.PROVIDER_ICONS[name].scale;
+        assert.ok(scale >= 0.5 && scale <= 1.5, `${name} scale ${scale} is sane`);
+    }
+    assert.ok(fmt.PROVIDER_ICONS.zai.scale < 1, "the full-width Z.ai diagonal scales down");
+
+    const kimi = fmt.PROVIDER_ICONS.kimi;
+    assert.equal(fmt.iconVariant(kimi, false), "../icons/kimi.svg");
+    assert.equal(fmt.iconVariant(kimi, true), "../icons/kimi-dark.svg");
+    assert.equal(fmt.iconVariant(kimi, undefined), "../icons/kimi.svg");
+    assert.equal(fmt.iconVariant(null, true), "", "no entry, no variant to break");
+    assert.equal(fmt.iconHeight(kimi, 16), 16);
+    assert.equal(
+        fmt.iconHeight(fmt.PROVIDER_ICONS.zai, 16),
+        Math.round(16 * fmt.PROVIDER_ICONS.zai.scale),
+        "the Z.ai box is its scaled height"
+    );
+    assert.equal(fmt.iconHeight(null, 16), 16, "no entry, no scaling");
+
+    for (const name of ["deepseek", "kimi", "zai"]) {
+        for (const variant of ["", "-dark"]) {
+            const file = new URL("../contents/icons/" + name + variant + ".svg", import.meta.url);
+            assert.ok(existsSync(file), name + variant + ".svg exists");
+            assert.match(readFileSync(file, "utf8"), /<svg[\s\S]*<\/svg>/, name + variant + ".svg is an SVG");
+        }
+    }
+});
+
 test("metricText honours privacy mode", () => {
     const hidden = Object.assign({}, metricValues, { hidden: true });
     assert.equal(fmt.metricText(fmt.METRIC_BALANCE, hidden), "\u2022\u2022\u2022");
     assert.equal(fmt.metricText(fmt.METRIC_TODAY_TOKENS, hidden), "\u2022\u2022\u2022");
+    assert.equal(
+        fmt.metricText(
+            fmt.METRIC_KIMI_WEEKLY_USED,
+            Object.assign({}, hidden, { hasKimi: true, kimiWeeklyUsed: 1, kimiWeeklyLimit: 4 })
+        ),
+        "\u2022\u2022\u2022"
+    );
 });
 
 // The popup shows exact counts so its figures can be reconciled with the

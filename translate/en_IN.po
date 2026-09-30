@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deepseek-usage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 17:56-0300\n"
-"PO-Revision-Date: 2026-09-27 17:56-0300\n"
+"POT-Creation-Date: 2026-09-30 13:58+0800\n"
+"PO-Revision-Date: 2026-09-30 13:58+0800\n"
 "Last-Translator: Unreviewed machine translation\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: en_IN\n"
@@ -50,34 +50,34 @@ msgstr "Could not read the balance — check the API key."
 msgid "The session token was rejected."
 msgstr "The session token was rejected."
 
-#: contents/ui/ApiClient.qml
+#: contents/ui/ApiClient.qml contents/ui/KimiClient.qml contents/ui/ZaiClient.qml
 msgid "HTTP error %1"
 msgstr "HTTP error %1"
 
-#: contents/ui/ApiClient.qml
+#: contents/ui/ApiClient.qml contents/ui/KimiClient.qml contents/ui/ZaiClient.qml
 msgid "Request timed out"
 msgstr "Request timed out"
 
-#: contents/ui/ApiClient.qml
+#: contents/ui/ApiClient.qml contents/ui/KimiClient.qml contents/ui/ZaiClient.qml
 msgid "Network error"
 msgstr "Network error"
 
-#: contents/ui/ApiClient.qml
+#: contents/ui/ApiClient.qml contents/ui/KimiClient.qml contents/ui/ZaiClient.qml
 msgid "never"
 msgstr "never"
 
-#: contents/ui/ApiClient.qml
+#: contents/ui/ApiClient.qml contents/ui/KimiClient.qml contents/ui/ZaiClient.qml
 msgid "just now"
 msgstr "just now"
 
-#: contents/ui/ApiClient.qml
+#: contents/ui/ApiClient.qml contents/ui/KimiClient.qml contents/ui/ZaiClient.qml
 msgctxt "minutes ago"
 msgid "%1 minute ago"
 msgid_plural "%1 minutes ago"
 msgstr[0] "%1 minute ago"
 msgstr[1] "%1 minutes ago"
 
-#: contents/ui/ApiClient.qml
+#: contents/ui/ApiClient.qml contents/ui/KimiClient.qml contents/ui/ZaiClient.qml
 msgctxt "hours ago"
 msgid "%1 hour ago"
 msgid_plural "%1 hours ago"
@@ -120,6 +120,22 @@ msgid "Lifetime spend"
 msgstr "Lifetime spend"
 
 #: contents/ui/ConfigGeneral.qml
+msgid "Kimi weekly usage"
+msgstr "Kimi weekly usage"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Kimi quota left"
+msgstr "Kimi quota left"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Z.ai 5-hour usage"
+msgstr "Z.ai 5-hour usage"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Z.ai quota left"
+msgstr "Z.ai quota left"
+
+#: contents/ui/ConfigGeneral.qml
 msgid "Could not write to KWallet."
 msgstr "Could not write to KWallet."
 
@@ -128,14 +144,66 @@ msgid "Saved to KWallet."
 msgstr "Saved to KWallet."
 
 #: contents/ui/ConfigGeneral.qml
+msgid "Panel"
+msgstr "Panel"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Panel shows:"
+msgstr "Panel shows:"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Add"
+msgstr "Add"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Remove"
+msgstr "Remove"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Nothing selected, the panel shows the icon only."
+msgstr "Nothing selected, the panel shows the icon only."
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Panel icons:"
+msgstr "Panel icons:"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Show each number's provider icon"
+msgstr "Show each number's provider icon"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Refresh interval (seconds):"
+msgstr "Refresh interval (seconds):"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Privacy:"
+msgstr "Privacy:"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Hide all amounts"
+msgstr "Hide all amounts"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Data"
+msgstr "Data"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Cost period (days):"
+msgstr "Cost period (days):"
+
+#: contents/ui/ConfigGeneral.qml
 msgid "Credentials"
 msgstr "Credentials"
 
 #: contents/ui/ConfigGeneral.qml
 msgid ""
-"Both values are stored in KWallet and never in the widget's configuration file."
+"All keys are stored in KWallet and never in the widget's configuration file."
 msgstr ""
-"Both values are stored in KWallet and never in the widget's configuration file."
+"All keys are stored in KWallet and never in the widget's configuration file."
+
+#: contents/ui/ConfigGeneral.qml
+msgid "DeepSeek"
+msgstr "DeepSeek"
 
 #: contents/ui/ConfigGeneral.qml
 msgid "API key:"
@@ -213,28 +281,56 @@ msgid "Session status:"
 msgstr "Session status:"
 
 #: contents/ui/ConfigGeneral.qml
-msgid "Presentation"
-msgstr "Presentation"
+msgid "Kimi Code (optional)"
+msgstr "Kimi Code (optional)"
 
 #: contents/ui/ConfigGeneral.qml
-msgid "Panel shows:"
-msgstr "Panel shows:"
+msgid ""
+"A Kimi Code (Coding Plan) key adds the weekly quota and per-model limits to the popup. Use a key that starts with sk-kimi- and the Kimi Code base URL — keys and addresses from the Kimi Open Platform (api.moonshot.cn) do not work here."
+msgstr ""
+"A Kimi Code (Coding Plan) key adds the weekly quota and per-model limits to the popup. Use a key that starts with sk-kimi- and the Kimi Code base URL — keys and addresses from the Kimi Open Platform (api.moonshot.cn) do not work here."
 
 #: contents/ui/ConfigGeneral.qml
-msgid "Refresh interval (seconds):"
-msgstr "Refresh interval (seconds):"
+msgid "Kimi API key:"
+msgstr "Kimi API key:"
 
 #: contents/ui/ConfigGeneral.qml
-msgid "Cost period (days):"
-msgstr "Cost period (days):"
+msgid "sk-kimi-…"
+msgstr "sk-kimi-…"
 
 #: contents/ui/ConfigGeneral.qml
-msgid "Privacy:"
-msgstr "Privacy:"
+msgid "Kimi API key status:"
+msgstr "Kimi API key status:"
 
 #: contents/ui/ConfigGeneral.qml
-msgid "Hide all amounts"
-msgstr "Hide all amounts"
+msgid "Kimi base URL:"
+msgstr "Kimi base URL:"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Z.ai (optional)"
+msgstr "Z.ai (optional)"
+
+#: contents/ui/ConfigGeneral.qml
+msgid ""
+"A Z.ai Coding Plan key adds the quota windows (5-hour, weekly, monthly) and the last 7 and 30 days of usage to the popup."
+msgstr ""
+"A Z.ai Coding Plan key adds the quota windows (5-hour, weekly, monthly) and the last 7 and 30 days of usage to the popup."
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Z.ai API key:"
+msgstr "Z.ai API key:"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Paste the Z.ai API key"
+msgstr "Paste the Z.ai API key"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Z.ai API key status:"
+msgstr "Z.ai API key status:"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Z.ai base URL:"
+msgstr "Z.ai base URL:"
 
 #: contents/ui/FullRepresentation.qml
 msgid "Today"
@@ -269,9 +365,58 @@ msgctxt "token usage table row: request count"
 msgid "Requests"
 msgstr "Requests"
 
+#: contents/ui/FullRepresentation.qml
+msgid "Quota"
+msgstr "Quota"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Used / Limit"
+msgstr "Used / Limit"
+
+#: contents/ui/FullRepresentation.qml
+msgid "% used"
+msgstr "% used"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Resets %1 (in %2)"
+msgstr "Resets %1 (in %2)"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Resets %1"
+msgstr "Resets %1"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Weekly quota"
+msgstr "Weekly quota"
+
+#: contents/ui/FullRepresentation.qml
+msgctxt "%1 is a time span like 5h or 7d"
+msgid "%1 limit"
+msgstr "%1 limit"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Limit #%1"
+msgstr "Limit #%1"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Tokens"
+msgstr "Tokens"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Requests"
+msgstr "Requests"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Last 7 days"
+msgstr "Last 7 days"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Last 30 days"
+msgstr "Last 30 days"
+
 #: contents/ui/FullRepresentation.qml contents/ui/main.qml
-msgid "DeepSeek Usage"
-msgstr "DeepSeek Usage"
+msgid "AI Usage"
+msgstr "AI Usage"
 
 #: contents/ui/FullRepresentation.qml contents/ui/main.qml
 msgid "Updated %1"
@@ -302,14 +447,18 @@ msgid "Highest %1"
 msgstr "Highest %1"
 
 #: contents/ui/FullRepresentation.qml
-msgid "Tokens"
-msgstr "Tokens"
-
-#: contents/ui/FullRepresentation.qml
 msgid "Per API key"
 msgstr "Per API key"
 
 #: contents/ui/FullRepresentation.qml
+msgid "Kimi Code"
+msgstr "Kimi Code"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Z.ai"
+msgstr "Z.ai"
+
+#: contents/ui/FullRepresentation.qml
 msgid ""
 "Balance-only mode. Add a platform session token in the settings to also see token usage, cost history and the per-key breakdown."
 msgstr ""
@@ -320,6 +469,30 @@ msgid ""
 "Costs and the days-left estimate are derived from the platform usage API, which is undocumented and may change without notice."
 msgstr ""
 "Costs and the days-left estimate are derived from the platform usage API, which is undocumented and may change without notice."
+
+#: contents/ui/KimiClient.qml
+msgid ""
+"The Kimi API rejected the key. Use a Kimi Code (Coding Plan) key (sk-kimi-…); keys from the Kimi Open Platform (api.moonshot.cn) do not work."
+msgstr ""
+"The Kimi API rejected the key. Use a Kimi Code (Coding Plan) key (sk-kimi-…); keys from the Kimi Open Platform (api.moonshot.cn) do not work."
+
+#: contents/ui/KimiClient.qml
+msgid "The Kimi API denied access (403) for this key."
+msgstr "The Kimi API denied access (403) for this key."
+
+#: contents/ui/KimiClient.qml
+msgid "The Kimi API is rate-limiting requests. Try again later."
+msgstr "The Kimi API is rate-limiting requests. Try again later."
+
+#: contents/ui/KimiClient.qml
+msgid ""
+"The Kimi usage endpoint was not found. Check the Kimi base URL in the widget settings."
+msgstr ""
+"The Kimi usage endpoint was not found. Check the Kimi base URL in the widget settings."
+
+#: contents/ui/KimiClient.qml
+msgid "Could not read the Kimi usage data — check the API key and base URL."
+msgstr "Could not read the Kimi usage data — check the API key and base URL."
 
 #: contents/ui/main.qml
 msgctxt "trailing period for a cost"
@@ -342,6 +515,14 @@ msgstr "Off-peak"
 msgctxt "DeepSeek's peak or off-peak rate cannot be determined"
 msgid "Unknown"
 msgstr "Unknown"
+
+#: contents/ui/main.qml
+msgid "Kimi weekly usage: %1"
+msgstr "Kimi weekly usage: %1"
+
+#: contents/ui/main.qml
+msgid "Z.ai 5-hour window: %1"
+msgstr "Z.ai 5-hour window: %1"
 
 #: contents/ui/main.qml
 msgid "Add a DeepSeek API key in the widget settings."
@@ -374,3 +555,21 @@ msgstr "%1 · changes in %2"
 #: contents/ui/main.qml
 msgid "Refresh"
 msgstr "Refresh"
+
+#: contents/ui/ZaiClient.qml
+msgid ""
+"The Z.ai API rejected the key. Check that it is a Z.ai Coding Plan API key."
+msgstr ""
+"The Z.ai API rejected the key. Check that it is a Z.ai Coding Plan API key."
+
+#: contents/ui/ZaiClient.qml
+msgid "The Z.ai API denied access (403) for this key."
+msgstr "The Z.ai API denied access (403) for this key."
+
+#: contents/ui/ZaiClient.qml
+msgid "The Z.ai API is rate-limiting requests. Try again later."
+msgstr "The Z.ai API is rate-limiting requests. Try again later."
+
+#: contents/ui/ZaiClient.qml
+msgid "Could not read the Z.ai usage data — check the API key and base URL."
+msgstr "Could not read the Z.ai usage data — check the API key and base URL."

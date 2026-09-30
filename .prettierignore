@@ -18,6 +18,9 @@ package-lock.json
 docs/images/
 *.plasmoid
 
+# Brand art, not markup to reflow: replace the files, keep the names.
+contents/icons/
+
 # Untracked local material
 NoriWeather-main/
 deepseek-is-peak.py

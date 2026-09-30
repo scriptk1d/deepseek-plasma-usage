@@ -29,7 +29,7 @@ DIR=$(cd -- "$(dirname -- "$0")" && pwd)
 ROOT=$(cd -- "$DIR/.." && pwd)
 
 KEYWORDS="-ci18n -ki18n:1 -ki18nc:1c,2 -ki18np:1,2 -ki18ncp:1c,2,3"
-COMMON="--from-code=UTF-8 --width=200 --add-location=file --package-name=deepseek-usage -kde"
+COMMON="--from-code=UTF-8 --width=200 --add-location=file --package-name=ai-usage -kde"
 
 checkOnly=
 if [ "${1:-}" = "--check" ]; then

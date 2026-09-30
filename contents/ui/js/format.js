@@ -395,17 +395,64 @@ function shortDay(epochSeconds) {
 
 /* ---------------------------------------------------------- panel metric */
 
+/*
+    Provider icons for the panel chip and the popup's section headers. Paths
+    are relative to contents/ui/ (the directory of the QML that shows them).
+    Each name has two files: <name>.svg with a black glyph for light themes
+    and <name>-dark.svg with a white glyph for dark ones (currentColor cannot
+    be used: a QML Image resolves it to black, which is invisible on a dark
+    panel). iconVariant() picks between them; the caller decides light or dark
+    from the theme's text colour.
+
+    `scale` is the optical correction for glyphs that read smaller or larger
+    than their boxes: the Z.ai diagonal spans the full width of its grid, so
+    at the same box size it looms over the solid letterforms and renders
+    smaller. The names are pinned by a test.
+*/
+var PROVIDER_ICONS = {
+    deepseek: { path: "../icons/deepseek.svg", scale: 1.0 },
+    kimi: { path: "../icons/kimi.svg", scale: 1.0 },
+    zai: { path: "../icons/zai.svg", scale: 0.8 }
+};
+
+// The file for `entry` in this theme: the base name, or its "-dark" white
+// counterpart when `dark` is true.
+function iconVariant(entry, dark) {
+    if (!entry || !entry.path) {
+        return "";
+    }
+    return dark ? entry.path.replace(/\.svg$/, "-dark.svg") : entry.path;
+}
+
+// The box size (square) for `entry` against a location's base size
+// (iconSizes.small), with the brand's optical scale applied.
+function iconHeight(entry, baseSize) {
+    var scale = entry && entry.scale ? entry.scale : 1.0;
+    return Math.round(baseSize * scale);
+}
+
 // Values are stored in the config and shown in the panel. The order matches
-// the combo box in ConfigGeneral.qml.
+// the checkbox list in ConfigGeneral.qml. The Kimi and Z.ai metrics sit after
+// the DeepSeek ones so an existing stored metric keeps its meaning, and the
+// two sentinels at the end are not offered in the settings any more: 9 was
+// the fixed "all providers" mode the checkbox list replaces, and 10 is what
+// an unchecked list stores, so "icon only" survives a restart.
 var METRIC_BALANCE = 0;
 var METRIC_TODAY_COST = 1;
 var METRIC_TODAY_TOKENS = 2;
 var METRIC_PERIOD_COST = 3;
 var METRIC_LIFETIME_COST = 4;
+var METRIC_KIMI_WEEKLY_USED = 5;
+var METRIC_KIMI_QUOTA_LEFT = 6;
+var METRIC_ZAI_WINDOW_USED = 7;
+var METRIC_ZAI_QUOTA_LEFT = 8;
+var METRIC_ALL_PROVIDERS = 9;
+var METRIC_ICON_ONLY = 10;
 
 // Renders the number shown on the panel for `metric`.
 // `values` fields: currency, locale, balance, todayCost, todayTokens, periodCost,
-// lifetimeCost, hasLifetime, hidden.
+// lifetimeCost, hasLifetime, hasKimi, kimiWeeklyUsed, kimiWeeklyLimit,
+// hasZai, zaiPercent, hidden.
 function metricText(metric, values) {
     var v = values || {};
     var text;
@@ -421,6 +468,18 @@ function metricText(metric, values) {
             break;
         case METRIC_LIFETIME_COST:
             text = v.hasLifetime ? money(v.lifetimeCost, v.currency, v.locale) : DASH;
+            break;
+        case METRIC_KIMI_WEEKLY_USED:
+            text = v.hasKimi ? percent(v.kimiWeeklyUsed, v.kimiWeeklyLimit) : DASH;
+            break;
+        case METRIC_KIMI_QUOTA_LEFT:
+            text = v.hasKimi ? tokens(v.kimiWeeklyLimit - v.kimiWeeklyUsed, v.locale) : DASH;
+            break;
+        case METRIC_ZAI_WINDOW_USED:
+            text = v.hasZai ? Math.round(v.zaiPercent) + "%" : DASH;
+            break;
+        case METRIC_ZAI_QUOTA_LEFT:
+            text = v.hasZai ? Math.max(0, 100 - Math.round(v.zaiPercent)) + "%" : DASH;
             break;
         case METRIC_BALANCE:
         default:

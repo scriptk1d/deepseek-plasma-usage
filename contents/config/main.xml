@@ -14,6 +14,14 @@
     <entry name="panelMetric" type="Int">
       <default>0</default>
     </entry>
+    <!-- The add-style panel composition: one entry per checked metric in the
+         settings, comma-free (StringList). Ids are the METRIC_* constants in
+         contents/ui/js/format.js. Empty is the pre-composition state and
+         falls back to panelMetric; "10" alone means "nothing checked", i.e.
+         icon only, so an explicit empty choice survives a restart. -->
+    <entry name="panelMetrics" type="StringList">
+      <default></default>
+    </entry>
     <entry name="costPeriodDays" type="Int">
       <default>30</default>
       <min>1</min>
@@ -24,6 +32,20 @@
     </entry>
     <entry name="hideAmounts" type="Bool">
       <default>false</default>
+    </entry>
+    <!-- Show each panel number's provider icon on the chip. Off by default:
+         several checked metrics with an icon each crowd a panel row. -->
+    <entry name="showProviderIcons" type="Bool">
+      <default>false</default>
+    </entry>
+    <!-- Not a secret, so unlike the keys it lives in the config file. Empty
+         takes the default in contents/ui/js/kimi.js (normalizeBaseUrl). -->
+    <entry name="kimiBaseUrl" type="String">
+      <default>https://api.kimi.com/coding/v1</default>
+    </entry>
+    <!-- Same deal as kimiBaseUrl; default in contents/ui/js/zai.js. -->
+    <entry name="zaiBaseUrl" type="String">
+      <default>https://api.z.ai</default>
     </entry>
     <!-- Bumped by the config page after secrets are written to KWallet so the
          applet re-reads them. -->

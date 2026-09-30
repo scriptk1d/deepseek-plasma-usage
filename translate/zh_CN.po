@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deepseek-usage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 17:56-0300\n"
-"PO-Revision-Date: 2026-09-27 17:56-0300\n"
+"POT-Creation-Date: 2026-09-30 13:58+0800\n"
+"PO-Revision-Date: 2026-09-30 13:58+0800\n"
 "Last-Translator: Unreviewed machine translation\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -48,33 +48,33 @@ msgstr "无法读取余额——请检查 API 密钥。"
 msgid "The session token was rejected."
 msgstr "会话令牌被拒绝。"
 
-#: contents/ui/ApiClient.qml
+#: contents/ui/ApiClient.qml contents/ui/KimiClient.qml contents/ui/ZaiClient.qml
 msgid "HTTP error %1"
 msgstr "HTTP 错误 %1"
 
-#: contents/ui/ApiClient.qml
+#: contents/ui/ApiClient.qml contents/ui/KimiClient.qml contents/ui/ZaiClient.qml
 msgid "Request timed out"
 msgstr "请求超时"
 
-#: contents/ui/ApiClient.qml
+#: contents/ui/ApiClient.qml contents/ui/KimiClient.qml contents/ui/ZaiClient.qml
 msgid "Network error"
 msgstr "网络错误"
 
-#: contents/ui/ApiClient.qml
+#: contents/ui/ApiClient.qml contents/ui/KimiClient.qml contents/ui/ZaiClient.qml
 msgid "never"
 msgstr "从未"
 
-#: contents/ui/ApiClient.qml
+#: contents/ui/ApiClient.qml contents/ui/KimiClient.qml contents/ui/ZaiClient.qml
 msgid "just now"
 msgstr "刚刚"
 
-#: contents/ui/ApiClient.qml
+#: contents/ui/ApiClient.qml contents/ui/KimiClient.qml contents/ui/ZaiClient.qml
 msgctxt "minutes ago"
 msgid "%1 minute ago"
 msgid_plural "%1 minutes ago"
 msgstr[0] "%1 分钟前"
 
-#: contents/ui/ApiClient.qml
+#: contents/ui/ApiClient.qml contents/ui/KimiClient.qml contents/ui/ZaiClient.qml
 msgctxt "hours ago"
 msgid "%1 hour ago"
 msgid_plural "%1 hours ago"
@@ -115,6 +115,22 @@ msgid "Lifetime spend"
 msgstr "累计支出"
 
 #: contents/ui/ConfigGeneral.qml
+msgid "Kimi weekly usage"
+msgstr "Kimi 本周用量"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Kimi quota left"
+msgstr "Kimi 剩余额度"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Z.ai 5-hour usage"
+msgstr "Z.ai 5 小时用量"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Z.ai quota left"
+msgstr "Z.ai 剩余额度"
+
+#: contents/ui/ConfigGeneral.qml
 msgid "Could not write to KWallet."
 msgstr "无法写入 KWallet。"
 
@@ -123,13 +139,65 @@ msgid "Saved to KWallet."
 msgstr "已保存到 KWallet。"
 
 #: contents/ui/ConfigGeneral.qml
+msgid "Panel"
+msgstr "面板"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Panel shows:"
+msgstr "面板显示："
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Add"
+msgstr "添加"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Remove"
+msgstr "移除"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Nothing selected, the panel shows the icon only."
+msgstr "未选择任何项时，面板只显示图标。"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Panel icons:"
+msgstr "面板图标："
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Show each number's provider icon"
+msgstr "在每个数字前显示对应的供应商图标"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Refresh interval (seconds):"
+msgstr "刷新间隔（秒）："
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Privacy:"
+msgstr "隐私："
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Hide all amounts"
+msgstr "隐藏所有金额"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Data"
+msgstr "数据"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Cost period (days):"
+msgstr "费用统计周期（天）："
+
+#: contents/ui/ConfigGeneral.qml
 msgid "Credentials"
 msgstr "凭据"
 
 #: contents/ui/ConfigGeneral.qml
 msgid ""
-"Both values are stored in KWallet and never in the widget's configuration file."
-msgstr "这两个值都保存在 KWallet 中，绝不会写入小部件的配置文件。"
+"All keys are stored in KWallet and never in the widget's configuration file."
+msgstr "所有密钥都保存在 KWallet 中，绝不会写入小部件的配置文件。"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "DeepSeek"
+msgstr "DeepSeek"
 
 #: contents/ui/ConfigGeneral.qml
 msgid "API key:"
@@ -207,28 +275,55 @@ msgid "Session status:"
 msgstr "会话状态："
 
 #: contents/ui/ConfigGeneral.qml
-msgid "Presentation"
-msgstr "显示"
+msgid "Kimi Code (optional)"
+msgstr "Kimi Code（可选）"
 
 #: contents/ui/ConfigGeneral.qml
-msgid "Panel shows:"
-msgstr "面板显示："
+msgid ""
+"A Kimi Code (Coding Plan) key adds the weekly quota and per-model limits to the popup. Use a key that starts with sk-kimi- and the Kimi Code base URL — keys and addresses from the Kimi Open Platform (api.moonshot.cn) do not work here."
+msgstr ""
+"Kimi Code（Coding Plan）密钥可在弹窗中显示本周额度及各模型的限额。请使用以 sk-kimi- 开头的密钥和 Kimi Code 基础 URL——Kimi 开放平台（api.moonshot.cn）的密钥和地址在此不可用。"
 
 #: contents/ui/ConfigGeneral.qml
-msgid "Refresh interval (seconds):"
-msgstr "刷新间隔（秒）："
+msgid "Kimi API key:"
+msgstr "Kimi API 密钥："
 
 #: contents/ui/ConfigGeneral.qml
-msgid "Cost period (days):"
-msgstr "费用统计周期（天）："
+msgid "sk-kimi-…"
+msgstr "sk-kimi-…"
 
 #: contents/ui/ConfigGeneral.qml
-msgid "Privacy:"
-msgstr "隐私："
+msgid "Kimi API key status:"
+msgstr "Kimi API 密钥状态："
 
 #: contents/ui/ConfigGeneral.qml
-msgid "Hide all amounts"
-msgstr "隐藏所有金额"
+msgid "Kimi base URL:"
+msgstr "Kimi 基础 URL："
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Z.ai (optional)"
+msgstr "Z.ai（可选）"
+
+#: contents/ui/ConfigGeneral.qml
+msgid ""
+"A Z.ai Coding Plan key adds the quota windows (5-hour, weekly, monthly) and the last 7 and 30 days of usage to the popup."
+msgstr "Z.ai Coding Plan 密钥可在弹窗中显示各额度窗口（5 小时、每周、每月）以及最近 7 天和 30 天的用量。"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Z.ai API key:"
+msgstr "Z.ai API 密钥："
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Paste the Z.ai API key"
+msgstr "粘贴 Z.ai API 密钥"
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Z.ai API key status:"
+msgstr "Z.ai API 密钥状态："
+
+#: contents/ui/ConfigGeneral.qml
+msgid "Z.ai base URL:"
+msgstr "Z.ai 基础 URL："
 
 #: contents/ui/FullRepresentation.qml
 msgid "Today"
@@ -263,9 +358,58 @@ msgctxt "token usage table row: request count"
 msgid "Requests"
 msgstr "请求数"
 
+#: contents/ui/FullRepresentation.qml
+msgid "Quota"
+msgstr "额度"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Used / Limit"
+msgstr "已用 / 上限"
+
+#: contents/ui/FullRepresentation.qml
+msgid "% used"
+msgstr "已用 %"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Resets %1 (in %2)"
+msgstr "重置于 %1（还有 %2）"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Resets %1"
+msgstr "重置于 %1"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Weekly quota"
+msgstr "本周额度"
+
+#: contents/ui/FullRepresentation.qml
+msgctxt "%1 is a time span like 5h or 7d"
+msgid "%1 limit"
+msgstr "%1 限额"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Limit #%1"
+msgstr "限额 #%1"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Tokens"
+msgstr "Token"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Requests"
+msgstr "请求数"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Last 7 days"
+msgstr "近 7 天"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Last 30 days"
+msgstr "近 30 天"
+
 #: contents/ui/FullRepresentation.qml contents/ui/main.qml
-msgid "DeepSeek Usage"
-msgstr "DeepSeek 用量"
+msgid "AI Usage"
+msgstr "AI 用量"
 
 #: contents/ui/FullRepresentation.qml contents/ui/main.qml
 msgid "Updated %1"
@@ -296,12 +440,16 @@ msgid "Highest %1"
 msgstr "最高 %1"
 
 #: contents/ui/FullRepresentation.qml
-msgid "Tokens"
-msgstr "Token"
-
-#: contents/ui/FullRepresentation.qml
 msgid "Per API key"
 msgstr "按 API 密钥"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Kimi Code"
+msgstr "Kimi Code"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Z.ai"
+msgstr "Z.ai"
 
 #: contents/ui/FullRepresentation.qml
 msgid ""
@@ -312,6 +460,29 @@ msgstr "仅余额模式。在设置中添加平台会话令牌，即可同时查
 msgid ""
 "Costs and the days-left estimate are derived from the platform usage API, which is undocumented and may change without notice."
 msgstr "费用和可用天数估算来自平台用量 API，该 API 没有公开文档，可能会在不另行通知的情况下变更。"
+
+#: contents/ui/KimiClient.qml
+msgid ""
+"The Kimi API rejected the key. Use a Kimi Code (Coding Plan) key (sk-kimi-…); keys from the Kimi Open Platform (api.moonshot.cn) do not work."
+msgstr ""
+"Kimi API 拒绝了该密钥。请使用 Kimi Code（Coding Plan）密钥（sk-kimi-…）；Kimi 开放平台（api.moonshot.cn）的密钥在此不可用。"
+
+#: contents/ui/KimiClient.qml
+msgid "The Kimi API denied access (403) for this key."
+msgstr "Kimi API 拒绝了此密钥的访问（403）。"
+
+#: contents/ui/KimiClient.qml
+msgid "The Kimi API is rate-limiting requests. Try again later."
+msgstr "Kimi API 请求过于频繁，请稍后重试。"
+
+#: contents/ui/KimiClient.qml
+msgid ""
+"The Kimi usage endpoint was not found. Check the Kimi base URL in the widget settings."
+msgstr "未找到 Kimi 用量接口。请检查小组件设置中的 Kimi 基础 URL。"
+
+#: contents/ui/KimiClient.qml
+msgid "Could not read the Kimi usage data — check the API key and base URL."
+msgstr "无法读取 Kimi 用量数据——请检查 API 密钥和基础 URL。"
 
 #: contents/ui/main.qml
 msgctxt "trailing period for a cost"
@@ -333,6 +504,14 @@ msgstr "低谷时段"
 msgctxt "DeepSeek's peak or off-peak rate cannot be determined"
 msgid "Unknown"
 msgstr "未知"
+
+#: contents/ui/main.qml
+msgid "Kimi weekly usage: %1"
+msgstr "Kimi 本周用量：%1"
+
+#: contents/ui/main.qml
+msgid "Z.ai 5-hour window: %1"
+msgstr "Z.ai 5 小时窗口：%1"
 
 #: contents/ui/main.qml
 msgid "Add a DeepSeek API key in the widget settings."
@@ -365,3 +544,20 @@ msgstr "%1 · %2 后切换"
 #: contents/ui/main.qml
 msgid "Refresh"
 msgstr "刷新"
+
+#: contents/ui/ZaiClient.qml
+msgid ""
+"The Z.ai API rejected the key. Check that it is a Z.ai Coding Plan API key."
+msgstr "Z.ai API 拒绝了该密钥。请确认它是 Z.ai Coding Plan 的 API 密钥。"
+
+#: contents/ui/ZaiClient.qml
+msgid "The Z.ai API denied access (403) for this key."
+msgstr "Z.ai API 拒绝了此密钥的访问（403）。"
+
+#: contents/ui/ZaiClient.qml
+msgid "The Z.ai API is rate-limiting requests. Try again later."
+msgstr "Z.ai API 请求过于频繁，请稍后重试。"
+
+#: contents/ui/ZaiClient.qml
+msgid "Could not read the Z.ai usage data — check the API key and base URL."
+msgstr "无法读取 Z.ai 用量数据——请检查 API 密钥和基础 URL。"

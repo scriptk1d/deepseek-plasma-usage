@@ -12,6 +12,8 @@ var DEFAULT_WALLET = "kdewallet";
 var DEFAULT_FOLDER = "Plasma";
 var API_KEY_ENTRY = "deepseek-api-key";
 var SESSION_TOKEN_ENTRY = "deepseek-session-token";
+var KIMI_API_KEY_ENTRY = "kimi-api-key";
+var ZAI_API_KEY_ENTRY = "zai-api-key";
 
 // POSIX single-quote a value for safe use inside `sh -c`.
 function shellQuote(value) {

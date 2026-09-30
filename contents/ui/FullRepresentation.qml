@@ -20,6 +20,8 @@ Item {
     id: root
 
     property QtObject api
+    property QtObject kimi
+    property QtObject zai
     property bool hideAmounts: false
     property bool hasSession: false
     property string periodLabel: ""
@@ -39,6 +41,17 @@ Item {
     readonly property bool hasUsage: api ? api.hasUsage : false
     readonly property bool isPlatform: api ? api.platformOk : false
     readonly property string noData: "\u2014"
+
+    // Light theme text is dark and vice versa: a light text colour means a
+    // dark background, the case the white glyph variants exist for.
+    readonly property bool darkBackground: {
+        var c = Kirigami.Theme.textColor;
+        return c.r * 0.299 + c.g * 0.587 + c.b * 0.114 > 0.5;
+    }
+
+    function providerIcon(entry) {
+        return Fmt.iconVariant(entry, root.darkBackground);
+    }
 
     readonly property real peakCost: {
         var list = api ? api.perDay : [];
@@ -127,6 +140,131 @@ Item {
         return cells;
     }
 
+    // The Kimi quota table: one row per quota (the weekly summary plus each
+    // per-model limit), sharing one GridLayout so the columns line up.
+    readonly property var kimiCells: {
+        var cells = [];
+        var k = kimi;
+        if (!k) {
+            return cells;
+        }
+        var rows = (k.summary ? [k.summary] : []).concat(k.limits || []);
+        var headers = [i18n("Quota"), i18n("Used / Limit"), i18n("% used")];
+        for (var h = 0; h < headers.length; h++) {
+            cells.push({ text: headers[h], column: h, bold: true, dim: false });
+        }
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var label = root.kimiRowLabel(row, i);
+            var reset = row.countdown.length > 0
+                ? i18n("Resets %1 (in %2)", row.resetAtText, row.countdown)
+                : (row.resetAtText.length > 0 ? i18n("Resets %1", row.resetAtText) : "");
+            cells.push({
+                // A newline gives a shared delegate a second, dimmer line for
+                // the reset stamp under the quota's name.
+                text: reset.length > 0 ? label + "\n" + reset : label,
+                column: 0,
+                bold: row.kind === "summary",
+                dim: false
+            });
+            cells.push({
+                text: root.tokens(row.used) + " / " + root.tokens(row.limit),
+                column: 1,
+                bold: false,
+                dim: true
+            });
+            cells.push({ text: Fmt.percent(row.used, row.limit), column: 2, bold: row.kind === "summary", dim: false });
+        }
+        return cells;
+    }
+
+    // A quota's own name when the payload has one; else the window it runs on
+    // ("5h limit"); else a plain ordinal so the row is still identifiable.
+    function kimiRowLabel(row, idx) {
+        if (row.kind === "summary") {
+            return i18n("Weekly quota");
+        }
+        if (row.name && row.name.length > 0) {
+            return row.name;
+        }
+        if (row.window && row.window.length > 0) {
+            return i18nc("%1 is a time span like 5h or 7d", "%1 limit", row.window);
+        }
+        return i18n("Limit #%1", idx + 1);
+    }
+
+    /*
+        The Z.ai tables. The quota rows mirror the Kimi table (span-named
+        quotas, reset stamps); the window totals are label/value pairs over
+        tokens and requests. Both share one cells builder each so the columns
+        line up the same way the other tables do.
+    */
+    readonly property var zaiQuotaCells: {
+        var cells = [];
+        var z = zai;
+        if (!z || z.quotaRows === null) {
+            return cells;
+        }
+        var headers = [i18n("Quota"), i18n("Used / Limit"), i18n("% used")];
+        for (var h = 0; h < headers.length; h++) {
+            cells.push({ text: headers[h], column: h, bold: true, dim: false });
+        }
+        var rows = z.quotaRows;
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var label = row.span.length > 0
+                ? i18nc("%1 is a time span like 5h or 7d", "%1 limit", row.span)
+                : i18n("Limit #%1", i + 1);
+            var reset = row.countdown.length > 0
+                ? i18n("Resets %1 (in %2)", row.resetAtText, row.countdown)
+                : (row.resetAtText.length > 0 ? i18n("Resets %1", row.resetAtText) : "");
+            cells.push({
+                text: reset.length > 0 ? label + "\n" + reset : label,
+                column: 0,
+                bold: i === 0,
+                dim: false
+            });
+            // TOKENS_LIMIT rows carry only a percentage today; the absolute
+            // counts exist on TIME_LIMIT rows (and older deployments).
+            cells.push({
+                text: row.hasAmounts ? root.tokens(row.used) + " / " + root.tokens(row.limit) : root.noData,
+                column: 1,
+                bold: false,
+                dim: true
+            });
+            cells.push({ text: row.percent + "%", column: 2, bold: i === 0, dim: false });
+        }
+        return cells;
+    }
+
+    readonly property var zaiWindowCells: {
+        var cells = [];
+        var z = zai;
+        if (!z || !z.hasData) {
+            return cells;
+        }
+        var headers = ["", i18n("Tokens"), i18n("Requests")];
+        for (var h = 0; h < headers.length; h++) {
+            cells.push({ text: headers[h], column: h, bold: true, dim: false });
+        }
+        var windows = [
+            { label: i18n("Last 7 days"), data: z.sevenDay },
+            { label: i18n("Last 30 days"), data: z.thirtyDay }
+        ];
+        for (var i = 0; i < windows.length; i++) {
+            var w = windows[i];
+            cells.push({ text: w.label, column: 0, bold: false, dim: false });
+            cells.push({ text: w.data ? root.tokens(w.data.tokens) : root.noData, column: 1, bold: true, dim: false });
+            cells.push({
+                text: w.data ? root.count(w.data.prompts) : root.noData,
+                column: 2,
+                bold: false,
+                dim: true
+            });
+        }
+        return cells;
+    }
+
     function shown(text) {
         return Fmt.hideable(text, root.hideAmounts);
     }
@@ -177,10 +315,21 @@ Item {
                 Layout.fillWidth: true
                 spacing: Kirigami.Units.smallSpacing
 
+                // Provider icon, at the brand's optical size.
+                Image {
+                    visible: root.api ? root.api.configured : false
+                    source: root.providerIcon(Fmt.PROVIDER_ICONS.deepseek)
+                    Layout.alignment: Qt.AlignVCenter
+                    Layout.preferredWidth: Fmt.iconHeight(Fmt.PROVIDER_ICONS.deepseek, Kirigami.Units.iconSizes.small)
+                    Layout.preferredHeight: Fmt.iconHeight(Fmt.PROVIDER_ICONS.deepseek, Kirigami.Units.iconSizes.small)
+                    fillMode: Image.PreserveAspectFit
+                    asynchronous: true
+                }
+
                 PlasmaComponents.Label {
                     Layout.fillWidth: true
                     Layout.minimumWidth: 0
-                    text: i18n("DeepSeek Usage")
+                    text: i18n("AI Usage")
                     elide: Text.ElideRight
                     font.bold: true
                 }
@@ -226,8 +375,12 @@ Item {
             }
 
             // -------------------------------------------------- balance hero
+            // DeepSeek's own blocks appear only when DeepSeek is configured;
+            // a $0.00 hero above the Kimi and Z.ai sections is noise, not
+            // information.
             ColumnLayout {
                 Layout.fillWidth: true
+                visible: root.api ? root.api.configured : false
                 spacing: 0
 
                 PlasmaComponents.Label {
@@ -270,6 +423,7 @@ Item {
             // -------------------------------------------------- key figures
             GridLayout {
                 Layout.fillWidth: true
+                visible: root.api ? root.api.configured : false
                 columns: 2
                 columnSpacing: Kirigami.Units.largeSpacing
                 rowSpacing: Kirigami.Units.smallSpacing
@@ -302,8 +456,10 @@ Item {
             }
 
             // ------------------------------------------------ peak / off-peak
+            // DeepSeek pricing: meaningless without DeepSeek credentials.
             RowLayout {
                 Layout.fillWidth: true
+                visible: root.api ? root.api.configured : false
                 spacing: Kirigami.Units.smallSpacing
 
                 Rectangle {
@@ -507,10 +663,166 @@ Item {
                 }
             }
 
+            // ---------------------------------------------------- kimi code
+            ColumnLayout {
+                Layout.fillWidth: true
+                visible: root.kimi ? (root.kimi.configured || root.kimi.hasData) : false
+                spacing: Kirigami.Units.smallSpacing
+
+                // A rule between providers, so each section reads as its own
+                // block; only drawn when there is something above to separate
+                // from.
+                Kirigami.Separator {
+                    Layout.fillWidth: true
+                    visible: root.api ? root.api.configured : false
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: Kirigami.Units.smallSpacing
+
+                    Image {
+                        source: root.providerIcon(Fmt.PROVIDER_ICONS.kimi)
+                        Layout.alignment: Qt.AlignVCenter
+                        Layout.preferredWidth: Fmt.iconHeight(Fmt.PROVIDER_ICONS.kimi, Kirigami.Units.iconSizes.small)
+                        Layout.preferredHeight: Fmt.iconHeight(Fmt.PROVIDER_ICONS.kimi, Kirigami.Units.iconSizes.small)
+                        fillMode: Image.PreserveAspectFit
+                        asynchronous: true
+                    }
+
+                    PlasmaComponents.Label {
+                        text: i18n("Kimi Code")
+                        font.bold: true
+                    }
+                }
+
+                PlasmaComponents.Label {
+                    Layout.fillWidth: true
+                    visible: root.kimi ? root.kimi.errorText.length > 0 : false
+                    wrapMode: Text.Wrap
+                    color: Kirigami.Theme.negativeTextColor
+                    font: Kirigami.Theme.smallFont
+                    text: root.kimi ? root.kimi.errorText : ""
+                }
+
+                GridLayout {
+                    Layout.fillWidth: true
+                    visible: root.kimiCells.length > 0
+                    columns: 3
+                    columnSpacing: Kirigami.Units.largeSpacing
+                    rowSpacing: Kirigami.Units.smallSpacing
+
+                    Repeater {
+                        model: root.kimiCells
+
+                        delegate: PlasmaComponents.Label {
+                            text: modelData.text
+                            // A two-line quota label must wrap, not elide, or
+                            // the reset stamp is cut off.
+                            wrapMode: modelData.text.indexOf("\n") >= 0 ? Text.Wrap : Text.NoWrap
+                            elide: modelData.text.indexOf("\n") >= 0 ? Text.ElideNone : Text.ElideRight
+                            font.bold: modelData.bold
+                            opacity: modelData.dim ? 0.55 : 1
+                            horizontalAlignment: modelData.column === 0 ? Text.AlignLeft : Text.AlignRight
+                            Layout.minimumWidth: 0
+                            Layout.fillWidth: modelData.column === 0
+                        }
+                    }
+                }
+            }
+
+            // ------------------------------------------------------- z.ai
+            ColumnLayout {
+                Layout.fillWidth: true
+                visible: root.zai ? (root.zai.configured || root.zai.hasData) : false
+                spacing: Kirigami.Units.smallSpacing
+
+                Kirigami.Separator {
+                    Layout.fillWidth: true
+                    visible: (root.api && root.api.configured)
+                        || (root.kimi && (root.kimi.configured || root.kimi.hasData))
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: Kirigami.Units.smallSpacing
+
+                    Image {
+                        source: root.providerIcon(Fmt.PROVIDER_ICONS.zai)
+                        Layout.alignment: Qt.AlignVCenter
+                        Layout.preferredWidth: Fmt.iconHeight(Fmt.PROVIDER_ICONS.zai, Kirigami.Units.iconSizes.small)
+                        Layout.preferredHeight: Fmt.iconHeight(Fmt.PROVIDER_ICONS.zai, Kirigami.Units.iconSizes.small)
+                        fillMode: Image.PreserveAspectFit
+                        asynchronous: true
+                    }
+
+                    PlasmaComponents.Label {
+                        text: i18n("Z.ai")
+                        font.bold: true
+                    }
+                }
+
+                PlasmaComponents.Label {
+                    Layout.fillWidth: true
+                    visible: root.zai ? root.zai.errorText.length > 0 : false
+                    wrapMode: Text.Wrap
+                    color: Kirigami.Theme.negativeTextColor
+                    font: Kirigami.Theme.smallFont
+                    text: root.zai ? root.zai.errorText : ""
+                }
+
+                GridLayout {
+                    Layout.fillWidth: true
+                    visible: root.zaiQuotaCells.length > 0
+                    columns: 3
+                    columnSpacing: Kirigami.Units.largeSpacing
+                    rowSpacing: Kirigami.Units.smallSpacing
+
+                    Repeater {
+                        model: root.zaiQuotaCells
+
+                        delegate: PlasmaComponents.Label {
+                            text: modelData.text
+                            // A two-line quota label must wrap, not elide, or
+                            // the reset stamp is cut off.
+                            wrapMode: modelData.text.indexOf("\n") >= 0 ? Text.Wrap : Text.NoWrap
+                            elide: modelData.text.indexOf("\n") >= 0 ? Text.ElideNone : Text.ElideRight
+                            font.bold: modelData.bold
+                            opacity: modelData.dim ? 0.55 : 1
+                            horizontalAlignment: modelData.column === 0 ? Text.AlignLeft : Text.AlignRight
+                            Layout.minimumWidth: 0
+                            Layout.fillWidth: modelData.column === 0
+                        }
+                    }
+                }
+
+                GridLayout {
+                    Layout.fillWidth: true
+                    visible: root.zaiWindowCells.length > 0
+                    columns: 3
+                    columnSpacing: Kirigami.Units.largeSpacing
+                    rowSpacing: Kirigami.Units.smallSpacing
+
+                    Repeater {
+                        model: root.zaiWindowCells
+
+                        delegate: PlasmaComponents.Label {
+                            text: modelData.text
+                            elide: Text.ElideRight
+                            font.bold: modelData.bold
+                            opacity: modelData.dim ? 0.55 : 1
+                            horizontalAlignment: modelData.column === 0 ? Text.AlignLeft : Text.AlignRight
+                            Layout.minimumWidth: 0
+                            Layout.fillWidth: modelData.column === 0
+                        }
+                    }
+                }
+            }
+
             // ------------------------------------------------------- notes
             PlasmaComponents.Label {
                 Layout.fillWidth: true
-                visible: root.api ? (!root.api.platformOk && !root.hasSession) : false
+                visible: root.api ? (root.api.configured && !root.api.platformOk && !root.hasSession) : false
                 wrapMode: Text.Wrap
                 font: Kirigami.Theme.smallFont
                 opacity: 0.7

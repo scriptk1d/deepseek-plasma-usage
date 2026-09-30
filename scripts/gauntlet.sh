@@ -55,10 +55,10 @@ if [ -z "$fast" ]; then
     step "the development fixture still reconciles" node tests/mock-platform-server.mjs --check
     step "Pack the plasmoid" ./install.sh --pack
     # The CI job asserts the archive is not empty; so does this.
-    if [ -s deepseek-usage.plasmoid ]; then
-        printf '   deepseek-usage.plasmoid is %s bytes\n' "$(wc -c < deepseek-usage.plasmoid | tr -d ' ')"
+    if [ -s ai-usage.plasmoid ]; then
+        printf '   ai-usage.plasmoid is %s bytes\n' "$(wc -c < ai-usage.plasmoid | tr -d ' ')"
     else
-        printf '   FAILED: deepseek-usage.plasmoid is missing or empty\n' >&2
+        printf '   FAILED: ai-usage.plasmoid is missing or empty\n' >&2
         failures=$((failures + 1))
     fi
 fi

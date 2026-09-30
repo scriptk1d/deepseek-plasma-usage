@@ -1,4 +1,4 @@
-# DeepSeek 用量 — 一个 Plasma 6 小部件
+# AI 用量 — 一个 Plasma 6 小部件
 
 - 🇬🇧/🇺🇸 [![English](https://img.shields.io/badge/Language-English-blue)](README.md)
 - 🇮🇳 [![हिन्दी](https://img.shields.io/badge/Language-हिन्दी-FF9933)](README.hi-IN.md)
@@ -10,11 +10,11 @@
 > [!NOTE]
 > 本文件是英文 README 的机器翻译，尚未经过母语者审阅。英文版 `README.md` 为权威版本，翻译政策见 `translate/README.md`。
 
-一个小巧、无依赖的 KDE Plasma 6 小程序，在面板中显示你的 DeepSeek API
-余额和用量，并带有一个详细的弹窗。
+一个小巧、无依赖的 KDE Plasma 6 小程序，在面板中显示你的 API
+余额和用量（DeepSeek、Kimi Code、Z.ai），并带有一个详细的弹窗。
 
-- **面板：** 一个图标加上你选择的数字（余额、今日支出、今日 tokens、
-  周期支出或累计支出）。
+- **面板：** 一个图标加上你在设置中勾选的数字——DeepSeek、Kimi、Z.ai
+  的任意指标组合并排显示；全部不勾选则只显示图标。
 - **弹窗：** 余额、今日/周期/累计支出、估算的"剩余天数"、
   输入/输出/缓存 tokens 和请求次数、每日支出迷你图，以及
   按 API 密钥细分的明细。
@@ -33,7 +33,7 @@
 
 ```sh
 ./install.sh            # install or upgrade for the current user
-./install.sh --pack     # write deepseek-usage.plasmoid for distribution
+./install.sh --pack     # write ai-usage.plasmoid for distribution
 ./install.sh --uninstall
 ```
 
@@ -70,6 +70,32 @@ _配置…_ 以添加你的凭据。
 > 会话令牌的权限等同于你的密码。请像对待密码一样对待它，如果你
 > 不再使用丰富模式，请将其从 KWallet 中删除。
 
+### Kimi Code（可选）
+
+小部件还可以显示 [Kimi Code](https://www.kimi.com/coding)（Coding Plan）的
+用量。把 Kimi Code 密钥以 `kimi-api-key` 存入同一个 KWallet 文件夹（或直接
+在小部件的设置页里粘贴），弹窗中就会出现 **Kimi Code** 区块：本周额度及各
+模型的限额，含已用/上限、百分比和重置时间。面板也可以选择显示 _Kimi 本周
+用量_ 或 _Kimi 剩余额度_。
+
+有两件事行不通，因为它们是最常见的错误：
+
+- 使用 Kimi 开放平台的密钥（来自 `platform.moonshot.cn`/`api.moonshot.cn`
+  的 `sk-…`）——这里读取的是 **Coding Plan** API，需要 `sk-kimi-…` 密钥，
+  开放平台密钥会得到 401；
+- 使用开放平台的基础 URL——小部件默认使用
+  `https://api.kimi.com/coding/v1`，基础 URL 设置项是为代理准备的，不是
+  用来切换到 `api.moonshot.cn` 的。
+
+### Z.ai（可选）
+
+小部件还可以显示 [Z.ai](https://z.ai)（GLM Coding Plan）的用量。把 Z.ai
+API 密钥以 `zai-api-key` 存入同一个 KWallet 文件夹（或直接在小部件的设置
+页里粘贴），弹窗中就会出现 **Z.ai** 区块：监控 API 报告的各额度窗口——
+5 小时 token 窗口、每周额度和每月工具额度，各带百分比和重置时间——以及
+最近 7 天和 30 天的 token 数与请求数。面板也可以选择显示 _Z.ai 5 小时
+用量_ 或 _Z.ai 剩余额度_。
+
 ## 数据来源
 
 该小部件是一个混合体，因为 DeepSeek 提供了两个互不相关的 API。
@@ -105,14 +131,44 @@ authorization: Bearer <SESSION_TOKEN>
 "预计剩余天数"数值都是**由此 API 推导**出来的，并在弹窗中
 如此标注。
 
+**Kimi Code API**（`api.kimi.com/coding/v1`）—— 与 Kimi CLI 读取的
+`usages` 端点相同。使用 API 密钥认证、无文档，并且——与上面 DeepSeek
+平台不同——它用真实的 HTTP 状态码表示失败：
+
+```
+GET https://api.kimi.com/coding/v1/usages
+Authorization: Bearer <KIMI_CODE_KEY>
+```
+
+响应负载是一个 `data[]` 配额列表（`model_name: "all"` 是每周额度）；
+同时也支持旧的 `usage`/`limits` 形态，以及 CLI 会回退使用的单数路径
+`/usage`。
+
+**Z.ai 监控 API**（`api.z.ai`）——Z.ai 用量页面背后的端点。使用 API 密钥
+认证（先尝试裸 `Authorization` 值，401 后重试 `Bearer`）、无文档；失败是
+真实的 HTTP 状态码：
+
+```
+GET https://api.z.ai/api/monitor/usage/quota/limit
+GET https://api.z.ai/api/monitor/usage/model-usage?startTime=&endTime=
+```
+
+`quota/limit` 返回额度行：两个只带百分比和 `nextResetTime` 的
+`TOKENS_LIMIT` 条目（5 小时和每周 token 窗口），以及一个 `TIME_LIMIT` 条目
+——它的 `usage` **就是**上限，`currentValue` 是已用数（每月工具额度）。
+`model-usage` 接受 `YYYY-MM-DD HH:mm:ss` 本地时间窗口并返回 `totalUsage`
+对象；小部件请求最近 7 天和 30 天。
+
 ## 配置
 
-| 设置         | 默认值 | 含义                       |
-| ------------ | ------ | -------------------------- |
-| 刷新间隔     | 300 秒 | 轮询频率（最小 30 秒）     |
-| 面板显示     | 余额   | 面板中显示哪个数字         |
-| 费用周期     | 30 天  | 周期总计和迷你图的时间窗口 |
-| 隐藏所有金额 | 关闭   | 将屏幕上每个金额替换为圆点 |
+| 设置          | 默认值                           | 含义                                                                         |
+| ------------- | -------------------------------- | ---------------------------------------------------------------------------- |
+| 刷新间隔      | 300 秒                           | 轮询频率（最小 30 秒）                                                       |
+| 面板显示      | 余额                             | 勾选的指标并排显示（全部不勾选则只显示图标）                                 |
+| 费用周期      | 30 天                            | 周期总计和迷你图的时间窗口                                                   |
+| 隐藏所有金额  | 关闭                             | 将屏幕上每个金额替换为圆点                                                   |
+| Kimi 基础 URL | `https://api.kimi.com/coding/v1` | Kimi Code 用量 API 的端点（为代理准备；不是用来切换到 `api.moonshot.cn` 的） |
+| Z.ai 基础 URL | `https://api.z.ai`               | Z.ai 监控 API 的端点（为代理准备）                                           |
 
 按密钥细分的列表只列出 API 密钥的**名称**。平台报告的
 掩码密钥 id 有意完全不渲染到任何地方。

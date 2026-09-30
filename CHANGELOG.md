@@ -14,6 +14,73 @@ What the numbers mean here:
 
 ## [Unreleased]
 
+### Changed
+
+- **The widget is now "AI Usage" (`sh.marble.ai.usage`), not "DeepSeek
+  Usage".** It has covered three providers since the Kimi and Z.ai sections
+  landed, and the old name promised only one of them. The plugin id moved with
+  the name, so a widget instance added before this change has to be added
+  again — a rename cannot carry a panel instance across ids. Credentials in
+  KWallet are untouched (`deepseek-api-key`, `kimi-api-key`, `zai-api-key`
+  keep their names on purpose), as are the settings keys.
+
+### Added
+
+- **The panel number is now an add-style composition.** The settings offer a
+  combo of every provider metric; picking one appends it to the list below,
+  each row removable with its own button, and the list's order is the panel's
+  order ("$7.78 · 30% · 27%"). A provider without credentials or still loading
+  is skipped rather than shown as a dash, and an empty list reduces the chip to
+  the icon (the peak-rate dot is dropped too). A stored single metric keeps
+  working unchanged until the composition is edited. The chip shows numbers
+  only by default; a "Panel icons" setting puts each number's provider icon
+  beside it (off, because several checked metrics with an icon each crowd a
+  panel row, and the tooltip names every figure anyway). The generic widget
+  icon steps aside whenever numbers are on the chip; only the icon-only mode
+  and the status texts keep it. The provider icons live in the popup too.
+
+- **The settings page is reordered by usage and every control reports its
+  edits.** Panel (composition, icons, refresh, privacy) comes first, then the
+  data window, then the three providers' credentials under their own headers.
+  The page emits `configurationChanged` on every change, so the dialog's
+  Apply/OK enablement tracks the page's own edits rather than the first click
+  only, and the composition list is plain page state rather than a binding the
+  framework's post-Apply echo could fight.
+
+- **The popup separates its providers, and hides the ones not configured.**
+  Each provider section now opens with a rule, and DeepSeek's balance hero,
+  key figures and peak state appear only when DeepSeek has credentials —
+  before, an unconfigured DeepSeek rendered a $0.00 hero and a column of
+  dashes above the Kimi and Z.ai sections, which read as one undifferentiated
+  block.
+
+- **Z.ai (GLM Coding Plan) usage, beside the Kimi data.** A third provider:
+  a "Z.ai" section in the popup lists the quota windows the monitor API
+  reports — the 5-hour token window, the weekly quota and the monthly tool
+  quota, each with its percentage, counts when the API carries them, and its
+  reset time — plus the last 7 and 30 days of tokens and requests. The panel
+  can show "Z.ai 5-hour usage" or "Z.ai quota left" as its number. The key is
+  stored in KWallet as `zai-api-key` (tried as a bare Authorization value
+  first, Bearer on retry — the endpoint has accepted both), and the base URL
+  is a plain setting defaulting to `https://api.z.ai`. The contract is pinned
+  by a recorded live probe: the quota endpoint's TOKENS_LIMIT rows carry only
+  a percentage and a reset time today, so the panel's headline percent comes
+  straight from the API; the absolute counts the reference tracker reads are
+  honoured when they exist.
+
+- **Kimi Code (Coding Plan) usage, beside the DeepSeek data.** The widget can
+  now also show the Kimi weekly quota and the per-model limits: a "Kimi Code"
+  section in the popup lists each quota with used / limit, percent and its reset
+  time, and the panel can show "Kimi weekly usage" or "Kimi quota left" as its
+  number. The key is stored in KWallet as `kimi-api-key` (a Kimi Code key,
+  `sk-kimi-…` — Moonshot Open Platform keys are answered with 401), and the
+  base URL is a plain setting defaulting to `https://api.kimi.com/coding/v1`.
+  The data comes from the same `GET /usages` endpoint the Kimi CLI reads (with
+  a `/usage` fallback), classified by real HTTP status codes — unlike the
+  DeepSeek platform API, which answers 200 for auth failures. Either provider
+  alone is enough: with no DeepSeek credentials the panel falls back to the
+  Kimi headline number.
+
 ## [0.3.0] - 2026-09-27
 
 ### Added

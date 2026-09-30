@@ -2,26 +2,26 @@
 # SPDX-FileCopyrightText: 2026 cassidy
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# Installs, upgrades, packs or removes the DeepSeek Usage widget for the
+# Installs, upgrades, packs or removes the AI Usage widget for the
 # current user.
 #
 #   ./install.sh              install (or upgrade) it
-#   ./install.sh --pack       write deepseek-usage.plasmoid next to this script
+#   ./install.sh --pack       write ai-usage.plasmoid next to this script
 #   ./install.sh --uninstall  remove it
 #   ./install.sh --help
 
 set -eu
 
-PLUGIN_ID=sh.marble.deepseek.usage
+PLUGIN_ID=sh.marble.ai.usage
 HERE=$(cd -- "$(dirname -- "$0")" && pwd)
 STAGE="$HERE/build/package"
 
 help() {
     cat <<'EOF'
-Installs, upgrades, packs or removes the DeepSeek Usage widget.
+Installs, upgrades, packs or removes the AI Usage widget.
 
   ./install.sh              install (or upgrade) it for the current user
-  ./install.sh --pack       write deepseek-usage.plasmoid next to this script
+  ./install.sh --pack       write ai-usage.plasmoid next to this script
   ./install.sh --uninstall  remove it
   ./install.sh --help
 
@@ -62,7 +62,7 @@ case "${1:-}" in
 --pack)
     refresh_translations
     stage
-    OUT="$HERE/deepseek-usage.plasmoid"
+    OUT="$HERE/ai-usage.plasmoid"
     rm -f "$OUT"
     (cd "$STAGE" && zip -qr "$OUT" .)
     echo "Wrote $OUT"

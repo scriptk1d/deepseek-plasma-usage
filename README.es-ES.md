@@ -38,7 +38,7 @@ pico/fuera de hora pico:
 
 ```sh
 ./install.sh            # install or upgrade for the current user
-./install.sh --pack     # write deepseek-usage.plasmoid for distribution
+./install.sh --pack     # write ai-usage.plasmoid for distribution
 ./install.sh --uninstall
 ```
 

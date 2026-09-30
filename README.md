@@ -1,4 +1,4 @@
-# DeepSeek Usage — a Plasma 6 widget
+# AI Usage — a Plasma 6 widget
 
 - 🇨🇳 [![简体中文](https://img.shields.io/badge/Language-简体中文-EE1C25)](README.zh-CN.md)
 - 🇮🇳 [![हिन्दी](https://img.shields.io/badge/Language-हिन्दी-FF9933)](README.hi-IN.md)
@@ -7,11 +7,12 @@
 - 🇷🇺 [![Русский](https://img.shields.io/badge/Language-Русский-0039A6)](README.ru-RU.md)
 - 🇪🇸 [![Español](https://img.shields.io/badge/Language-Español-F1BF00)](README.es-ES.md)
 
-A small, dependency-free KDE Plasma 6 applet that shows your DeepSeek API
-balance and usage in the panel, with a detailed popup.
+A small, dependency-free KDE Plasma 6 applet that shows your API balance and
+usage — DeepSeek, Kimi Code and Z.ai — in the panel, with a detailed popup.
 
-- **Panel:** an icon plus the number you choose (balance, today's spend,
-  today's tokens, period spend or lifetime spend).
+- **Panel:** an icon plus the numbers you check in the settings — any mix of
+  DeepSeek, Kimi and Z.ai metrics, side by side; nothing checked means just
+  the icon.
 - **Popup:** balance, today/period/lifetime spend, an estimated "days left",
   in/out/cached tokens and request counts, a daily-spend sparkline and a
   per-API-key breakdown.
@@ -30,7 +31,7 @@ As a panel chip — the icon, the number you choose, and the peak/off-peak dot:
 
 ```sh
 ./install.sh            # install or upgrade for the current user
-./install.sh --pack     # write deepseek-usage.plasmoid for distribution
+./install.sh --pack     # write ai-usage.plasmoid for distribution
 ./install.sh --uninstall
 ```
 
@@ -67,6 +68,34 @@ the widget falls back to the balance and tells you why.
 > The session token is as powerful as your password. Treat it like one, and
 > remove it from KWallet if you stop using rich mode.
 
+### Kimi Code (optional)
+
+The widget can also show your [Kimi Code](https://www.kimi.com/coding) (Coding
+Plan) usage. Store a Kimi Code key as `kimi-api-key` in the same KWallet folder
+(or paste it on the widget's settings page) and the popup gains a **Kimi Code**
+section: the weekly quota and each per-model limit, with used / limit, percent
+and the reset time. The panel can show _Kimi weekly usage_ or _Kimi quota left_
+as its number.
+
+Two things that do not work, because they are the usual mistakes:
+
+- a key from the Kimi Open Platform (`sk-…` from
+  `platform.moonshot.cn`/`api.moonshot.cn`) — this reads the **Coding Plan**
+  API, which wants a `sk-kimi-…` key and answers Open Platform keys with 401;
+- the Open Platform base URL — the widget defaults to
+  `https://api.kimi.com/coding/v1` and the base URL is only a setting for
+  proxies, not for switching to `api.moonshot.cn`.
+
+### Z.ai (optional)
+
+The widget can also show your [Z.ai](https://z.ai) (GLM Coding Plan) usage.
+Store a Z.ai API key as `zai-api-key` in the same KWallet folder (or paste it
+on the widget's settings page) and the popup gains a **Z.ai** section: the
+quota windows the monitor API reports — the 5-hour token window, the weekly
+quota and the monthly tool quota, each with its percentage and reset time —
+plus the last 7 and 30 days of tokens and requests. The panel can show
+_Z.ai 5-hour usage_ or _Z.ai quota left_ as its number.
+
 ## Data sources
 
 The widget is a hybrid because DeepSeek exposes two unrelated APIs.
@@ -102,14 +131,45 @@ Because there is no documented "usage" endpoint, the spend figures and the
 "estimated days left" value are **derived** from this API and are labelled as
 such in the popup.
 
+**Kimi Code API** (`api.kimi.com/coding/v1`) — the same `usages` endpoint the
+Kimi CLI reads. API-key authenticated, undocumented, and — unlike the DeepSeek
+platform above — it classifies failures with real HTTP status codes:
+
+```
+GET https://api.kimi.com/coding/v1/usages
+Authorization: Bearer <KIMI_CODE_KEY>
+```
+
+The payload is a `data[]` list of quotas (`model_name: "all"` is the weekly
+one); an older `usage`/`limits` shape is also understood, as is the singular
+`/usage` path the CLI falls back to.
+
+**Z.ai monitor API** (`api.z.ai`) — the endpoints behind the Z.ai usage page.
+API-key authenticated (tried as a bare `Authorization` value first, `Bearer` on
+retry) and undocumented; failures are real HTTP status codes:
+
+```
+GET https://api.z.ai/api/monitor/usage/quota/limit
+GET https://api.z.ai/api/monitor/usage/model-usage?startTime=&endTime=
+```
+
+`quota/limit` answers the quota rows: two `TOKENS_LIMIT` entries that carry
+only a percentage and a `nextResetTime` (the 5-hour and weekly token windows),
+and a `TIME_LIMIT` entry whose `usage` **is** the limit and whose
+`currentValue` is the used count (the monthly tool quota). `model-usage` takes
+`YYYY-MM-DD HH:mm:ss` local-time windows and answers a `totalUsage` object;
+the widget asks for the last 7 and 30 days.
+
 ## Configuration
 
-| Setting          | Default | Meaning                                        |
-| ---------------- | ------- | ---------------------------------------------- |
-| Refresh interval | 300 s   | how often to poll (minimum 30 s)               |
-| Panel shows      | Balance | which number appears in the panel              |
-| Cost period      | 30 days | window for the period totals and the sparkline |
-| Hide all amounts | off     | replace every amount on screen with bullets    |
+| Setting          | Default                          | Meaning                                                                                    |
+| ---------------- | -------------------------------- | ------------------------------------------------------------------------------------------ |
+| Refresh interval | 300 s                            | how often to poll (minimum 30 s)                                                           |
+| Panel shows      | Balance                          | the checked metrics, shown side by side (nothing checked: icon only)                       |
+| Cost period      | 30 days                          | window for the period totals and the sparkline                                             |
+| Hide all amounts | off                              | replace every amount on screen with bullets                                                |
+| Kimi base URL    | `https://api.kimi.com/coding/v1` | endpoint for the Kimi Code usage API (for proxies; not for switching to `api.moonshot.cn`) |
+| Z.ai base URL    | `https://api.z.ai`               | endpoint for the Z.ai monitor API (for proxies)                                            |
 
 The per-key breakdown lists API key **names** only. The masked key id that the
 platform reports is deliberately never rendered anywhere.

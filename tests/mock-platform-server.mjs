@@ -94,6 +94,110 @@ const BALANCE = "12.4800000000000000";
 const BONUS = "0";
 const LIFETIME_COST = "4.6200000000000000";
 
+/*
+    Kimi Code (Coding Plan) usage, served under /coding/v1/usages. The shape
+    is the one the live endpoint answers (verified 2026-09-30, with a real
+    key): a `usage` summary plus a `limits` array, amounts as strings,
+    TIME_UNIT_* enums and ISO timestamps with microseconds — plus `usages`
+    ratio objects the widget does not read but must tolerate. Numbers are
+    invented like everything else here: a weekly quota at 30%.
+*/
+const KIMI_QUOTA_LIMIT = 120;
+const KIMI_QUOTA_USED = 36;
+
+function kimiUsagesPayload() {
+    const iso = ms => new Date(Date.now() + ms).toISOString();
+    return {
+        usage: {
+            limit: String(KIMI_QUOTA_LIMIT),
+            used: String(KIMI_QUOTA_USED),
+            remaining: String(KIMI_QUOTA_LIMIT - KIMI_QUOTA_USED),
+            resetTime: iso(2 * 86400 * 1000 + 3 * 3600 * 1000 + 15 * 60 * 1000)
+        },
+        limits: [
+            {
+                window: { duration: 300, timeUnit: "TIME_UNIT_MINUTE" },
+                detail: {
+                    limit: "120",
+                    remaining: "115",
+                    resetTime: iso(45 * 60 * 1000)
+                }
+            }
+        ],
+        usages: {
+            limit_5h: { used_ratio: 0.041, reset_time: iso(45 * 60 * 1000) },
+            limit_7d: { used_ratio: 0.3, reset_time: iso(2 * 86400 * 1000) }
+        }
+    };
+}
+
+/*
+    Z.ai (GLM Coding Plan) monitor endpoints, under /api/monitor/usage/. The
+    quota shape is the one recorded live (2026-09-30): TOKENS_LIMIT rows carry
+    only a percentage and a reset time, the TIME_LIMIT row carries counts
+    where `usage` IS the limit. Numbers invented as usual.
+*/
+const ZAI_QUOTA_5H = 27;
+const ZAI_QUOTA_WEEKLY = 6;
+const ZAI_MONTHLY_LIMIT = 1000;
+const ZAI_MONTHLY_USED = 120;
+const ZAI_SEVEN = { prompts: 412, tokens: 68204551 };
+const ZAI_THIRTY = { prompts: 1730, tokens: 291882016 };
+
+function zaiEnvelope(data) {
+    return { code: 200, msg: "Operation successful", data: data, success: true };
+}
+
+function zaiQuotaPayload() {
+    const ms = Date.now();
+    return zaiEnvelope({
+        limits: [
+            { type: "TOKENS_LIMIT", unit: 3, number: 5, percentage: ZAI_QUOTA_5H, nextResetTime: ms + 2 * 3600 * 1000 },
+            {
+                type: "TOKENS_LIMIT",
+                unit: 6,
+                number: 1,
+                percentage: ZAI_QUOTA_WEEKLY,
+                nextResetTime: ms + 19 * 3600 * 1000
+            },
+            {
+                type: "TIME_LIMIT",
+                unit: 5,
+                number: 1,
+                usage: ZAI_MONTHLY_LIMIT,
+                currentValue: ZAI_MONTHLY_USED,
+                remaining: ZAI_MONTHLY_LIMIT - ZAI_MONTHLY_USED,
+                percentage: 12,
+                nextResetTime: ms + 9 * 86400 * 1000
+            }
+        ],
+        level: "pro"
+    });
+}
+
+function zaiModelUsagePayload(rawUrl) {
+    // Distinguish the two windows by the startTime the widget asked for: 7
+    // days back is the weekly payload, anything longer the monthly one.
+    let days = 30;
+    try {
+        const start = new URL(rawUrl, "http://localhost").searchParams.get("startTime") || "";
+        const parsed = Date.parse(start.replace(" ", "T"));
+        if (!isNaN(parsed)) {
+            days = Math.round((Date.now() - parsed) / 86400000);
+        }
+    } catch (e) {
+        // keep the 30-day default
+    }
+    const totals = days <= 8 ? ZAI_SEVEN : ZAI_THIRTY;
+    return zaiEnvelope({
+        totalUsage: {
+            totalModelCallCount: totals.prompts,
+            totalTokensUsage: totals.tokens
+        },
+        granularity: "hourly"
+    });
+}
+
 // Fractions of a bucket's tokens: completions, then cached vs missed prompt.
 const RESPONSE_SHARE = 0.005;
 const CACHE_HIT_SHARE = 0.98;
@@ -304,7 +408,14 @@ if (isMain() && process.argv.includes("--check")) {
 const routes = {
     "/api/v0/users/get_user_summary": summaryPayload,
     "/api/v0/usage/by_api_key/cost": costPayload,
-    "/api/v0/usage/by_api_key/amount": amountPayload
+    "/api/v0/usage/by_api_key/amount": amountPayload,
+    // Kimi Code usage; the singular /coding/v1/usage is deliberately absent,
+    // like on the live endpoint, so the fallback path is exercised only
+    // against a base URL that serves it.
+    "/coding/v1/usages": kimiUsagesPayload,
+    // Z.ai monitor endpoints; model-usage answers by the window asked.
+    "/api/monitor/usage/quota/limit": zaiQuotaPayload,
+    "/api/monitor/usage/model-usage": zaiModelUsagePayload
 };
 
 // Everything below is described rather than echoed, for two reasons. CodeQL's
@@ -357,7 +468,7 @@ const server = http.createServer((req, res) => {
         return;
     }
     res.writeHead(200, { "content-type": "application/json" });
-    res.end(JSON.stringify(handler()));
+    res.end(JSON.stringify(handler(req.url)));
 });
 
 if (isMain()) {
@@ -366,4 +477,24 @@ if (isMain()) {
     });
 }
 
-export { costPayload, amountPayload, summaryPayload, reconcile, MODELS, BALANCE, BONUS, LIFETIME_COST };
+export {
+    costPayload,
+    amountPayload,
+    summaryPayload,
+    kimiUsagesPayload,
+    zaiQuotaPayload,
+    zaiModelUsagePayload,
+    reconcile,
+    MODELS,
+    BALANCE,
+    BONUS,
+    LIFETIME_COST,
+    KIMI_QUOTA_USED,
+    KIMI_QUOTA_LIMIT,
+    ZAI_QUOTA_5H,
+    ZAI_QUOTA_WEEKLY,
+    ZAI_MONTHLY_LIMIT,
+    ZAI_MONTHLY_USED,
+    ZAI_SEVEN,
+    ZAI_THIRTY
+};
