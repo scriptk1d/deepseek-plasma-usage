@@ -131,6 +131,7 @@
     "Add": "Добавить",
     "DeepSeek": "DeepSeek",
     "All keys are stored in KWallet and never in the widget's configuration file.": "Все ключи хранятся в KWallet и никогда — в файле конфигурации виджета.",
-    "AI Usage": "Использование ИИ"
+    "AI Usage": "Использование ИИ",
+    "Quota trend": "Динамика квоты"
   }
 }

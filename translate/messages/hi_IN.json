@@ -130,6 +130,7 @@
     "Add": "जोड़ें",
     "DeepSeek": "DeepSeek",
     "All keys are stored in KWallet and never in the widget's configuration file.": "सभी कुंजियाँ KWallet में संग्रहीत होती हैं, कभी विजेट की कॉन्फ़िगरेशन फ़ाइल में नहीं।",
-    "AI Usage": "AI उपयोग"
+    "AI Usage": "AI उपयोग",
+    "Quota trend": "कोटा रुझान"
   }
 }

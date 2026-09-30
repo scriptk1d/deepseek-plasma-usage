@@ -16,6 +16,7 @@ import org.kde.coreaddons as KCoreAddons
 import "js/wallet.js" as WalletJs
 import "js/format.js" as Fmt
 import "js/peak.js" as Peak
+import "js/history.js" as History
 
 PlasmoidItem {
     id: root
@@ -90,6 +91,17 @@ PlasmoidItem {
     property bool secretsInFlight: false
     property int loadedRevision: -1
 
+    // The quota trend's recorded points (js/history.js). Parsed once here
+    // and appended by recordUsage(); the config string is the only copy on
+    // disk, the property is the only copy in memory.
+    property var usagePoints: []
+
+    Component.onCompleted: {
+        usagePoints = History.parse(Plasmoid.configuration.usageHistory);
+        recordUsage();
+        reloadSecrets();
+    }
+
     Wallet {
         id: wallet
     }
@@ -147,6 +159,7 @@ PlasmoidItem {
         peakStateText: root.peakStateText
         peakRemainingText: root.peakRemainingText
         numberLocale: root.numberLocale
+        history: root.usagePoints
 
         onRefreshRequested: root.refreshAll()
     }
@@ -155,6 +168,26 @@ PlasmoidItem {
         apiClient.refresh()
         kimiClient.refresh()
         zaiClient.refresh()
+    }
+
+    // Records one trend point whenever both a provider has data and the last
+    // point is stale enough (js/history.js decides "stale enough" and keeps
+    // the buffer capped). Only writes the config when something moved.
+    function recordUsage() {
+        var now = Math.floor(Date.now() / 1000);
+        var kimiPct = kimiClient.kimiOk && kimiClient.headlineLimit > 0
+            ? Math.round((kimiClient.headlineUsed / kimiClient.headlineLimit) * 100)
+            : null;
+        var zaiPct = zaiClient.zaiOk ? Math.round(zaiClient.headlinePercent) : null;
+        if (kimiPct === null && zaiPct === null) {
+            return;
+        }
+        var result = History.append(usagePoints, now, kimiPct, zaiPct);
+        if (!result.changed) {
+            return;
+        }
+        usagePoints = result.points;
+        Plasmoid.configuration.usageHistory = History.serialize(result.points);
     }
 
     Plasmoid.title: i18n("AI Usage")
@@ -228,6 +261,16 @@ PlasmoidItem {
         onTriggered: root.now = new Date()
     }
 
+    Timer {
+        // The trend recorder checks every minute but only appends when the
+        // spacing allows (History.MIN_SPACING_SEC), so the timer is a cheap
+        // poll and the config write happens a handful of times an hour.
+        interval: 60000
+        repeat: true
+        running: true
+        onTriggered: root.recordUsage()
+    }
+
     Plasmoid.contextualActions: [
         PlasmaCore.Action {
             text: i18n("Refresh")
@@ -256,8 +299,6 @@ PlasmoidItem {
     onPeriodDaysChanged: if (apiClient.configured) { apiClient.refresh() }
     onKimiBaseUrlChanged: if (kimiClient.configured) { kimiClient.refresh() }
     onZaiBaseUrlChanged: if (zaiClient.configured) { zaiClient.refresh() }
-
-    Component.onCompleted: root.reloadSecrets()
 
     function shownMoney(value) {
         return Fmt.hideable(Fmt.money(value, apiClient.displayCurrency, root.numberLocale), root.hideAmounts);

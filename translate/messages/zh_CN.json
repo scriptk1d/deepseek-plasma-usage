@@ -127,6 +127,7 @@
     "Add": "添加",
     "DeepSeek": "DeepSeek",
     "All keys are stored in KWallet and never in the widget's configuration file.": "所有密钥都保存在 KWallet 中，绝不会写入小部件的配置文件。",
-    "AI Usage": "AI 用量"
+    "AI Usage": "AI 用量",
+    "Quota trend": "额度趋势"
   }
 }

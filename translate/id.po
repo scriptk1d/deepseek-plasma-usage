@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deepseek-usage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 13:58+0800\n"
-"PO-Revision-Date: 2026-09-30 13:58+0800\n"
+"POT-Creation-Date: 2026-09-30 16:21+0800\n"
+"PO-Revision-Date: 2026-09-30 16:21+0800\n"
 "Last-Translator: Unreviewed machine translation\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: id\n"
@@ -450,6 +450,10 @@ msgstr "Per kunci API"
 #: contents/ui/FullRepresentation.qml
 msgid "Kimi Code"
 msgstr "Kimi Code"
+
+#: contents/ui/FullRepresentation.qml
+msgid "Quota trend"
+msgstr "Tren kuota"
 
 #: contents/ui/FullRepresentation.qml
 msgid "Z.ai"

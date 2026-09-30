@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ai-usage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 13:58+0800\n"
+"POT-Creation-Date: 2026-09-30 16:21+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -442,6 +442,10 @@ msgstr ""
 
 #: contents/ui/FullRepresentation.qml
 msgid "Kimi Code"
+msgstr ""
+
+#: contents/ui/FullRepresentation.qml
+msgid "Quota trend"
 msgstr ""
 
 #: contents/ui/FullRepresentation.qml

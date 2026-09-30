@@ -127,6 +127,7 @@
     "Add": "Tambah",
     "DeepSeek": "DeepSeek",
     "All keys are stored in KWallet and never in the widget's configuration file.": "Semua kunci disimpan di KWallet dan tidak pernah di berkas konfigurasi widget.",
-    "AI Usage": "Penggunaan AI"
+    "AI Usage": "Penggunaan AI",
+    "Quota trend": "Tren kuota"
   }
 }

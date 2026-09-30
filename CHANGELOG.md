@@ -28,6 +28,14 @@ What the numbers mean here:
 
 ### Added
 
+- **The Kimi and Z.ai sections record a quota trend.** Every refresh (at most
+  one point per ten minutes, 512 points — about three and a half days) writes
+  the headline quota's percentage to the applet configuration, and each
+  provider's popup section draws it as a line over time: the Z.ai 5-hour
+  window shows its fill-and-reset sawtooth, the Kimi weekly quota its drift.
+  Percent is the recorded unit, so a reset cannot push the history out of
+  range, and nothing but percentages is stored — no amounts, no keys.
+
 - **The panel number is now an add-style composition.** The settings offer a
   combo of every provider metric; picking one appends it to the list below,
   each row removable with its own button, and the list's order is the panel's

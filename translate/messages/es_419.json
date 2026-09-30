@@ -130,6 +130,7 @@
     "Add": "Añadir",
     "DeepSeek": "DeepSeek",
     "All keys are stored in KWallet and never in the widget's configuration file.": "Todas las claves se guardan en KWallet y nunca en el archivo de configuración del widget.",
-    "AI Usage": "Uso de IA"
+    "AI Usage": "Uso de IA",
+    "Quota trend": "Tendencia de la cuota"
   }
 }

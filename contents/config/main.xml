@@ -47,6 +47,12 @@
     <entry name="zaiBaseUrl" type="String">
       <default>https://api.z.ai</default>
     </entry>
+    <!-- The quota trend's recorded points: a compact JSON array written by
+         the applet itself (js/history.js), read by nobody else. Capped in
+         size there, so the entry cannot grow without bound. -->
+    <entry name="usageHistory" type="String">
+      <default></default>
+    </entry>
     <!-- Bumped by the config page after secrets are written to KWallet so the
          applet re-reads them. -->
     <entry name="secretsRevision" type="Int">
