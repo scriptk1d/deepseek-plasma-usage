@@ -85,10 +85,24 @@ if [ ! -f "$DIR/template.pot" ]; then
     exit 1
 fi
 
+# The extraction is compared after canonicalisation, because two gettext
+# versions are in circulation: a developer's (Fedora's 0.25) and the CI
+# runner's (Ubuntu's 0.21). They disagree about the order xgettext emits
+# entries in and about whether "% used" looks like a printf format (the
+# older one adds `#, c-format` for the "% u"). Both are tooling noise, not
+# catalogue changes, so blocks are sorted and c-format lines dropped for the
+# comparison only; the committed file keeps its own layout.
+canonical() {
+    awk 'BEGIN { RS = ""; ORS = "\n\n" } { gsub(/#, c-format\n/, "") } 1' "$1" |
+        LC_ALL=C sort
+}
+
 strip_dates "$DIR/template.pot" "$tmpdir/old.pot"
 strip_dates "$tmpdir/merged.pot" "$tmpdir/new.pot"
+canonical "$tmpdir/old.pot" > "$tmpdir/old.canon"
+canonical "$tmpdir/new.pot" > "$tmpdir/new.canon"
 
-if ! diff -u "$tmpdir/old.pot" "$tmpdir/new.pot" > "$tmpdir/pot.diff"; then
+if ! diff -u "$tmpdir/old.canon" "$tmpdir/new.canon" > "$tmpdir/pot.diff"; then
     echo "translate/merge.sh: template.pot is out of date -- run without --check" >&2
     echo "  (an i18n() call was added, changed or removed and not re-extracted)" >&2
     sed 's/^/  /' "$tmpdir/pot.diff" | head -40 >&2
