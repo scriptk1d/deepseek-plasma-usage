@@ -16,6 +16,15 @@ What the numbers mean here:
 
 ## [Unreleased]
 
+### Changed
+
+- **The popup's three providers now read as three sections.** Every section
+  opens with the same header — the brand icon beside the provider's name,
+  bolder and a touch larger than the table text (a shared ProviderHeader) —
+  and DeepSeek finally has one: the widget title used to stand in for it,
+  which is also why the header no longer carries a provider icon. Section
+  rules between them are unchanged.
+
 ### Removed
 
 - **The quota trend is gone — chart and recording.** 0.4.0 recorded every

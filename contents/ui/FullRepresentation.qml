@@ -42,17 +42,6 @@ Item {
     readonly property bool isPlatform: api ? api.platformOk : false
     readonly property string noData: "\u2014"
 
-    // Light theme text is dark and vice versa: a light text colour means a
-    // dark background, the case the white glyph variants exist for.
-    readonly property bool darkBackground: {
-        var c = Kirigami.Theme.textColor;
-        return c.r * 0.299 + c.g * 0.587 + c.b * 0.114 > 0.5;
-    }
-
-    function providerIcon(entry) {
-        return Fmt.iconVariant(entry, root.darkBackground);
-    }
-
     readonly property real peakCost: {
         var list = api ? api.perDay : [];
         var max = 0;
@@ -315,17 +304,6 @@ Item {
                 Layout.fillWidth: true
                 spacing: Kirigami.Units.smallSpacing
 
-                // Provider icon, at the brand's optical size.
-                Image {
-                    visible: root.api ? root.api.configured : false
-                    source: root.providerIcon(Fmt.PROVIDER_ICONS.deepseek)
-                    Layout.alignment: Qt.AlignVCenter
-                    Layout.preferredWidth: Fmt.iconHeight(Fmt.PROVIDER_ICONS.deepseek, Kirigami.Units.iconSizes.small)
-                    Layout.preferredHeight: Fmt.iconHeight(Fmt.PROVIDER_ICONS.deepseek, Kirigami.Units.iconSizes.small)
-                    fillMode: Image.PreserveAspectFit
-                    asynchronous: true
-                }
-
                 PlasmaComponents.Label {
                     Layout.fillWidth: true
                     Layout.minimumWidth: 0
@@ -378,6 +356,13 @@ Item {
             // DeepSeek's own blocks appear only when DeepSeek is configured;
             // a $0.00 hero above the Kimi and Z.ai sections is noise, not
             // information.
+            ProviderHeader {
+                Layout.fillWidth: true
+                visible: root.api ? root.api.configured : false
+                title: i18n("DeepSeek")
+                icon: Fmt.PROVIDER_ICONS.deepseek
+            }
+
             ColumnLayout {
                 Layout.fillWidth: true
                 visible: root.api ? root.api.configured : false
@@ -677,23 +662,10 @@ Item {
                     visible: root.api ? root.api.configured : false
                 }
 
-                RowLayout {
+                ProviderHeader {
                     Layout.fillWidth: true
-                    spacing: Kirigami.Units.smallSpacing
-
-                    Image {
-                        source: root.providerIcon(Fmt.PROVIDER_ICONS.kimi)
-                        Layout.alignment: Qt.AlignVCenter
-                        Layout.preferredWidth: Fmt.iconHeight(Fmt.PROVIDER_ICONS.kimi, Kirigami.Units.iconSizes.small)
-                        Layout.preferredHeight: Fmt.iconHeight(Fmt.PROVIDER_ICONS.kimi, Kirigami.Units.iconSizes.small)
-                        fillMode: Image.PreserveAspectFit
-                        asynchronous: true
-                    }
-
-                    PlasmaComponents.Label {
-                        text: i18n("Kimi Code")
-                        font.bold: true
-                    }
+                    title: i18n("Kimi Code")
+                    icon: Fmt.PROVIDER_ICONS.kimi
                 }
 
                 PlasmaComponents.Label {
@@ -743,23 +715,10 @@ Item {
                         || (root.kimi && (root.kimi.configured || root.kimi.hasData))
                 }
 
-                RowLayout {
+                ProviderHeader {
                     Layout.fillWidth: true
-                    spacing: Kirigami.Units.smallSpacing
-
-                    Image {
-                        source: root.providerIcon(Fmt.PROVIDER_ICONS.zai)
-                        Layout.alignment: Qt.AlignVCenter
-                        Layout.preferredWidth: Fmt.iconHeight(Fmt.PROVIDER_ICONS.zai, Kirigami.Units.iconSizes.small)
-                        Layout.preferredHeight: Fmt.iconHeight(Fmt.PROVIDER_ICONS.zai, Kirigami.Units.iconSizes.small)
-                        fillMode: Image.PreserveAspectFit
-                        asynchronous: true
-                    }
-
-                    PlasmaComponents.Label {
-                        text: i18n("Z.ai")
-                        font.bold: true
-                    }
+                    title: i18n("Z.ai")
+                    icon: Fmt.PROVIDER_ICONS.zai
                 }
 
                 PlasmaComponents.Label {
