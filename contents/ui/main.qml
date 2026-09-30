@@ -151,8 +151,6 @@ PlasmoidItem {
         peakStateText: root.peakStateText
         peakRemainingText: root.peakRemainingText
         numberLocale: root.numberLocale
-
-        onRefreshRequested: root.refreshAll()
     }
 
     function refreshAll() {

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deepseek-usage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-01 00:38+0800\n"
-"PO-Revision-Date: 2026-10-01 00:38+0800\n"
+"POT-Creation-Date: 2026-10-01 00:51+0800\n"
+"PO-Revision-Date: 2026-10-01 00:51+0800\n"
 "Last-Translator: Unreviewed machine translation\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: id_ID\n"
@@ -198,7 +198,7 @@ msgid ""
 msgstr ""
 "Semua kunci disimpan di KWallet dan tidak pernah di berkas konfigurasi widget."
 
-#: contents/ui/ConfigGeneral.qml
+#: contents/ui/ConfigGeneral.qml contents/ui/FullRepresentation.qml
 msgid "DeepSeek"
 msgstr "DeepSeek"
 
@@ -448,18 +448,6 @@ msgstr "7 hari terakhir"
 msgid "Last 30 days"
 msgstr "30 hari terakhir"
 
-#: contents/ui/FullRepresentation.qml contents/ui/main.qml
-msgid "AI Usage"
-msgstr "Penggunaan AI"
-
-#: contents/ui/FullRepresentation.qml contents/ui/main.qml
-msgid "Updated %1"
-msgstr "Diperbarui %1"
-
-#: contents/ui/FullRepresentation.qml
-msgid "Refresh now"
-msgstr "Segarkan sekarang"
-
 #: contents/ui/FullRepresentation.qml
 msgid "Includes %1 bonus credit"
 msgstr "Termasuk kredit bonus %1"
@@ -551,6 +539,10 @@ msgid "Unknown"
 msgstr "Tidak diketahui"
 
 #: contents/ui/main.qml
+msgid "AI Usage"
+msgstr "Penggunaan AI"
+
+#: contents/ui/main.qml
 msgid "Kimi weekly quota is about to reset"
 msgstr "Kuota mingguan Kimi akan segera diatur ulang"
 
@@ -587,6 +579,10 @@ msgstr "Jendela 5 jam Z.ai: %1"
 #: contents/ui/main.qml
 msgid "Add a DeepSeek API key in the widget settings."
 msgstr "Tambahkan kunci API DeepSeek di pengaturan widget."
+
+#: contents/ui/main.qml
+msgid "Updated %1"
+msgstr "Diperbarui %1"
 
 #: contents/ui/main.qml
 msgid "Loading…"

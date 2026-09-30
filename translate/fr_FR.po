@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deepseek-usage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-01 00:38+0800\n"
-"PO-Revision-Date: 2026-10-01 00:38+0800\n"
+"POT-Creation-Date: 2026-10-01 00:51+0800\n"
+"PO-Revision-Date: 2026-10-01 00:51+0800\n"
 "Last-Translator: Unreviewed machine translation\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr_FR\n"
@@ -203,7 +203,7 @@ msgid ""
 msgstr ""
 "Toutes les clés sont stockées dans KWallet et jamais dans le fichier de configuration du widget."
 
-#: contents/ui/ConfigGeneral.qml
+#: contents/ui/ConfigGeneral.qml contents/ui/FullRepresentation.qml
 msgid "DeepSeek"
 msgstr "DeepSeek"
 
@@ -453,18 +453,6 @@ msgstr "7 derniers jours"
 msgid "Last 30 days"
 msgstr "30 derniers jours"
 
-#: contents/ui/FullRepresentation.qml contents/ui/main.qml
-msgid "AI Usage"
-msgstr "Utilisation de l’IA"
-
-#: contents/ui/FullRepresentation.qml contents/ui/main.qml
-msgid "Updated %1"
-msgstr "Actualisé %1"
-
-#: contents/ui/FullRepresentation.qml
-msgid "Refresh now"
-msgstr "Actualiser maintenant"
-
 #: contents/ui/FullRepresentation.qml
 msgid "Includes %1 bonus credit"
 msgstr "Comprend %1 de crédit offert"
@@ -557,6 +545,10 @@ msgid "Unknown"
 msgstr "Inconnu"
 
 #: contents/ui/main.qml
+msgid "AI Usage"
+msgstr "Utilisation de l’IA"
+
+#: contents/ui/main.qml
 msgid "Kimi weekly quota is about to reset"
 msgstr "Le quota hebdomadaire Kimi est sur le point d’être réinitialisé"
 
@@ -593,6 +585,10 @@ msgstr "Fenêtre de 5 heures de Z.ai : %1"
 #: contents/ui/main.qml
 msgid "Add a DeepSeek API key in the widget settings."
 msgstr "Ajoutez une clé d'API DeepSeek dans les paramètres du widget."
+
+#: contents/ui/main.qml
+msgid "Updated %1"
+msgstr "Actualisé %1"
 
 #: contents/ui/main.qml
 msgid "Loading…"

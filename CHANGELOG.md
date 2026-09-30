@@ -22,8 +22,10 @@ What the numbers mean here:
   opens with the same header — the brand icon beside the provider's name,
   bolder and a touch larger than the table text (a shared ProviderHeader) —
   and DeepSeek finally has one: the widget title used to stand in for it,
-  which is also why the header no longer carries a provider icon. Section
-  rules between them are unchanged.
+  which is also why the header no longer carries a provider icon. The
+  popup's own title row is gone too — the widget's name over content that
+  already carries its own is decoration, and Refresh lives in the context
+  menu. Section rules between them are unchanged.
 
 ### Removed
 

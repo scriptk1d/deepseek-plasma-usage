@@ -35,7 +35,6 @@ Item {
     property string peakStateText: ""
     property string peakRemainingText: ""
 
-    signal refreshRequested()
 
     readonly property string currency: api ? api.displayCurrency : ""
     readonly property bool hasUsage: api ? api.hasUsage : false
@@ -298,37 +297,6 @@ Item {
             y: Kirigami.Units.gridUnit
             width: scroll.width - Kirigami.Units.gridUnit * 2
             spacing: Kirigami.Units.largeSpacing
-
-            // ------------------------------------------------------- header
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Kirigami.Units.smallSpacing
-
-                PlasmaComponents.Label {
-                    Layout.fillWidth: true
-                    Layout.minimumWidth: 0
-                    text: i18n("AI Usage")
-                    elide: Text.ElideRight
-                    font.bold: true
-                }
-
-                PlasmaComponents.Label {
-                    visible: root.api ? root.api.hasData : false
-                    text: root.api ? i18n("Updated %1", root.api.updatedLabel()) : ""
-                    font: Kirigami.Theme.smallFont
-                    opacity: 0.7
-                }
-
-                PlasmaComponents.ToolButton {
-                    icon.name: "view-refresh"
-                    enabled: root.api ? (root.api.configured && !root.api.loading) : false
-                    onClicked: root.refreshRequested()
-
-                    PlasmaComponents.ToolTip.text: i18n("Refresh now")
-                    PlasmaComponents.ToolTip.visible: hovered
-                    PlasmaComponents.ToolTip.delay: Kirigami.Units.toolTipDelay
-                }
-            }
 
             // ------------------------------------------------------- errors
             Rectangle {
